@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陈新钰的个人主页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes swing {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(15deg); }
+            40% { transform: rotate(-10deg); }
+            60% { transform: rotate(5deg); }
+            80% { transform: rotate(-5deg); }
+        }
+        
+        .social-icon {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        
+        .social-icon.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .social-icon:hover {
+            animation: swing 0.6s ease;
+            animation-iteration-count: 1;
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px) rotateX(5deg) !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .quote-container {
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .quote-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .quote-container::before, .quote-container::after {
+            content: '"';
+            font-size: 3rem;
+            color: rgba(156, 163, 175, 0.3);
+            position: absolute;
+        }
+        
+        .quote-container::before {
+            top: -20px;
+            left: -30px;
+        }
+        
+        .quote-container::after {
+            bottom: -50px;
+            right: -30px;
+        }
+        
+        .avatar {
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8), 0 0 0 10px rgba(156, 163, 175, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.9), 0 0 0 16px rgba(156, 163, 175, 0.3);
+        }
+        
+        .name-highlight {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .font-display {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        
+        .font-quote {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-weight: 300;
+            font-style: italic;
+        }
+        
+        .font-card-title {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+        }
+        
+        .font-card-content {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-weight: 400;
+        }
+        
+        .github-icon {
+            color: #181717;
+        }
+        
+        .github-icon:hover {
+            color: #4078c0;
+        }
+        
+        .linkedin-icon {
+            color: #0077B5;
+        }
+        
+        .linkedin-icon:hover {
+            color: #005582;
+        }
+        
+        .wechat-icon {
+            color: #07C160;
+        }
+        
+        .wechat-icon:hover {
+            color: #05A84C;
+        }
+        
+        .qq-icon {
+            color: #12B7F5;
+        }
+        
+        .qq-icon:hover {
+            color: #0D9DDB;
+        }
+        
+        .email-icon {
+            color: #EA4335;
+        }
+        
+        .email-icon:hover {
+            color: #D33426;
+        }
+        
+        .card-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover .card-icon {
+            transform: scale(1.1);
+        }
+        
+        /* 初始布局样式 */
+        .initial-layout {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            z-index: 10;
+            transition: all 0.8s ease;
+            pointer-events: none;
+        }
+        
+        .initial-layout.minimized {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s ease, opacity 0.8s ease, visibility 0s 0.8s;
+        }
+        
+        .initial-avatar {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+        }
+        
+        .initial-name {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .initial-title {
+            font-size: 1.5rem;
+        }
+        
+        /* 内容容器 */
+        .content-container {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .content-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 主内容区域 */
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        
+        #main-content.show {
+            opacity: 1;
+        }
+        
+        /* 头像过渡动画 */
+        .avatar-transition {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 20;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8), 0 0 0 10px rgba(156, 163, 175, 0.2);
+        }
+        
+        .avatar-transition img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- 初始布局 - 头像、名字和身份 -->
+    <div id="initial-layout" class="initial-layout">
+        <div class="avatar rounded-full initial-avatar overflow-hidden mb-6 border-4 border-white">
+            <img id="profile-avatar" 
+                 src="https://cdn-avatars.huggingface.co/v1/production/uploads/noauth/R1mAu5TR8RGL8Ig0d0bd4.jpeg" 
+                 alt="陈新钰的头像" 
+                 class="w-full h-full object-cover"
+                 onerror="this.src='https://huggingface.co/front/assets/huggingface_logo-noborder.svg'">
+        </div>
+        
+        <h1 class="initial-name font-display text-gray-800">
+            <span class="name-highlight">陈新钰</span>
+        </h1>
+        <p class="initial-title text-gray-600 tracking-wide">学生 & 网络工程师</p>
+    </div>
+    
+    <!-- 头像过渡元素 -->
+    <div id="avatar-transition" class="avatar-transition hidden">
+        <img id="transition-avatar" 
+             src="https://cdn-avatars.huggingface.co/v1/production/uploads/noauth/R1mAu5TR8RGL8Ig0d0bd4.jpeg" 
+             alt="陈新钰的头像"
+             onerror="this.src='https://huggingface.co/front/assets/huggingface_logo-noborder.svg'">
+    </div>
+    
+    <!-- 主内容区域 -->
+    <div id="main-content" class="container mx-auto px-4 py-12">
+        <!-- 头像部分 -->
+        <div class="flex flex-col items-center mb-12">
+            <div class="avatar rounded-full w-40 h-40 overflow-hidden mb-6 border-4 border-white">
+                <img id="final-avatar" 
+                     src="https://cdn-avatars.huggingface.co/v1/production/uploads/noauth/R1mAu5TR8RGL8Ig0d0bd4.jpeg" 
+                     alt="陈新钰的头像" 
+                     class="w-full h-full object-cover"
+                     onerror="this.src='https://huggingface.co/front/assets/huggingface_logo-noborder.svg'">
+            </div>
+            
+            <h1 class="text-4xl font-display text-gray-800 mb-2">
+                <span class="name-highlight">陈新钰</span>
+            </h1>
+            <p class="text-gray-600 mb-8 tracking-wide">学生 & 网络工程师</p>
+            
+            <!-- 格言部分 -->
+            <div id="quote-container" class="quote-container max-w-2xl text-center px-8 py-6 bg-white rounded-lg shadow-md mb-8 relative">
+                <p id="quote" class="text-xl font-quote text-gray-700 leading-relaxed"></p>
+                <p id="quote-author" class="text-right mt-2 text-gray-500 font-medium"></p>
+            </div>
+            
+            <!-- 社交图标 -->
+            <div id="social-icons" class="flex space-x-6">
+                <a href="https://github.com/chenxinyu" target="_blank" rel="noopener noreferrer" class="social-icon github-icon text-4xl">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/in/chenxinyu" target="_blank" rel="noopener noreferrer" class="social-icon linkedin-icon text-4xl">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="#" class="social-icon wechat-icon text-4xl">
+                    <i class="fab fa-weixin"></i>
+                </a>
+                <a href="#" class="social-icon qq-icon text-4xl">
+                    <i class="fab fa-qq"></i>
+                </a>
+                <a href="mailto:chenxinyu@example.com" class="social-icon email-icon text-4xl">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 功能卡片 -->
+        <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 卡片将通过JS动态加载 -->
+        </div>
+    </div>
+
+    <script>
+        // 格言列表
+        const quotes = [
+            { text: "生活就像一盒巧克力，你永远不知道下一颗是什么味道。", author: "阿甘正传" },
+            { text: "成功的秘诀在于对目标的坚定不移。", author: "本杰明·迪斯雷利" },
+            { text: "不要等待机会，而要创造机会。", author: "乔治·伯纳德·肖" },
+            { text: "人生最大的快乐不在于占有什么，而在于追求什么的过程。", author: "罗伯特·威廉·本生" },
+            { text: "生活不是等待暴风雨过去，而是学会在雨中跳舞。", author: "维维安·格林" },
+            { text: "昨天是历史，明天是谜团，而今天是礼物。", author: "功夫熊猫" },
+            { text: "人生就像骑自行车，为了保持平衡，你必须保持前进。", author: "阿尔伯特·爱因斯坦" }
+        ];
+        
+        // 卡片数据
+        const cards = [
+            { 
+                title: "我的论文", 
+                description: "查看我发表的学术论文和研究", 
+                icon: "file-alt", 
+                buttonText: "阅读论文", 
+                gradientFrom: "blue-500", 
+                gradientTo: "indigo-500", 
+                buttonColor: "blue-500", 
+                buttonHover: "blue-600",
+                url: "#"
+            },
+            { 
+                title: "开源项目", 
+                description: "探索我贡献的开源AI项目", 
+                icon: "code-branch", 
+                buttonText: "查看代码", 
+                gradientFrom: "purple-500", 
+                gradientTo: "pink-500", 
+                buttonColor: "purple-500", 
+                buttonHover: "purple-600",
+                url: "#"
+            },
+            { 
+                title: "技术博客", 
+                description: "阅读我的AI技术文章和教程", 
+                icon: "blog", 
+                buttonText: "阅读文章", 
+                gradientFrom: "green-500", 
+                gradientTo: "teal-500", 
+                buttonColor: "green-500", 
+                buttonHover: "green-600",
+                url: "#"
+            },
+            { 
+                title: "会议演讲", 
+                description: "观看我在AI会议上的演讲", 
+                icon: "video", 
+                buttonText: "观看视频", 
+                gradientFrom: "red-500", 
+                gradientTo: "orange-500", 
+                buttonColor: "red-500", 
+                buttonHover: "red-600",
+                url: "#"
+            },
+            { 
+                title: "Hugging Face", 
+                description: "访问我的Hugging Face个人资料", 
+                icon: "robot", 
+                buttonText: "查看资料", 
+                gradientFrom: "yellow-500", 
+                gradientTo: "amber-500", 
+                buttonColor: "yellow-500", 
+                buttonHover: "yellow-600",
+                url: "https://huggingface.co/chenxinyu"
+            },
+            { 
+                title: "联系我", 
+                description: "发送合作或咨询请求", 
+                icon: "envelope", 
+                buttonText: "发送消息", 
+                gradientFrom: "indigo-500", 
+                gradientTo: "violet-500", 
+                buttonColor: "indigo-500", 
+                buttonHover: "indigo-600",
+                url: "#"
+            }
+        ];
+        
+        // 随机选择一条格言
+        function getRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            return quotes[randomIndex];
+        }
+        
+        // 更新格言显示
+        function updateQuote() {
+            const quote = getRandomQuote();
+            document.getElementById('quote').textContent = `"${quote.text}"`;
+            document.getElementById('quote-author').textContent = `- ${quote.author}`;
+        }
+        
+        // 渲染卡片
+        function renderCards() {
+            const container = document.getElementById('cards-container');
+            
+            cards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg';
+                
+                // 卡片顶部
+                const cardTop = document.createElement('div');
+                cardTop.className = `h-48 bg-gradient-to-r from-${card.gradientFrom} to-${card.gradientTo} flex items-center justify-center`;
+                
+                const cardIcon = document.createElement('i');
+                cardIcon.className = `fas fa-${card.icon} text-white text-6xl card-icon`;
+                
+                cardTop.appendChild(cardIcon);
+                
+                // 卡片内容
+                const cardContent = document.createElement('div');
+                cardContent.className = 'p-6';
+                
+                const cardTitle = document.createElement('h3');
+                cardTitle.className = 'text-xl font-card-title text-gray-800 mb-2';
+                cardTitle.textContent = card.title;
+                
+                const cardDesc = document.createElement('p');
+                cardDesc.className = 'text-gray-600 mb-4 font-card-content';
+                cardDesc.textContent = card.description;
+                
+                const cardButton = document.createElement('a');
+                cardButton.href = card.url;
+                cardButton.className = `inline-block px-4 py-2 bg-${card.buttonColor} text-white rounded-md hover:bg-${card.buttonHover} transition font-medium`;
+                cardButton.textContent = card.buttonText;
+                
+                cardContent.appendChild(cardTitle);
+                cardContent.appendChild(cardDesc);
+                cardContent.appendChild(cardButton);
+                
+                // 组装卡片
+                cardElement.appendChild(cardTop);
+                cardElement.appendChild(cardContent);
+                
+                container.appendChild(cardElement);
+                
+                // 延迟显示卡片动画
+                setTimeout(() => {
+                    cardElement.classList.add('show');
+                }, 800 + index * 200);
+            });
+        }
+        
+        // 检查头像是否有效
+        function checkAvatar() {
+            const avatarImg = document.getElementById('profile-avatar');
+            const finalAvatarImg = document.getElementById('final-avatar');
+            const transitionAvatar = document.getElementById('transition-avatar');
+            
+            fetch(avatarImg.src)
+                .then(response => {
+                    if (!response.ok) {
+                        avatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
+                        finalAvatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
+                        transitionAvatar.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
+                    }
+                })
+                .catch(() => {
+                    avatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
+                    finalAvatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
+                    transitionAvatar.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
+                });
+        }
+        
+        // 动画序列
+        function startAnimationSequence() {
+            // 获取相关元素
+            const initialLayout = document.getElementById('initial-layout');
+            const mainContent = document.getElementById('main-content');
+            const avatarTransition = document.getElementById('avatar-transition');
+            const initialAvatar = document.querySelector('.initial-avatar');
+            const finalAvatar = document.querySelector('#main-content .avatar');
+            
+            // 获取初始头像位置和大小
+            const initialAvatarRect = initialAvatar.getBoundingClientRect();
+            const finalAvatarRect = finalAvatar.getBoundingClientRect();
+            
+            // 设置过渡头像的初始位置和大小
+            avatarTransition.style.width = initialAvatarRect.width + 'px';
+            avatarTransition.style.height = initialAvatarRect.height + 'px';
+            avatarTransition.style.left = initialAvatarRect.left + 'px';
+            avatarTransition.style.top = initialAvatarRect.top + 'px';
+            avatarTransition.classList.remove('hidden');
+            
+            // 1. 初始布局淡出
+            setTimeout(() => {
+                initialLayout.classList.add('minimized');
+                
+                // 2. 头像动画过渡到最终位置
+                setTimeout(() => {
+                    avatarTransition.style.width = '160px';
+                    avatarTransition.style.height = '160px';
+                    avatarTransition.style.left = finalAvatarRect.left + 'px';
+                    avatarTransition.style.top = finalAvatarRect.top + 'px';
+                    
+                    // 3. 显示主内容区域
+                    setTimeout(() => {
+                        mainContent.classList.add('show');
+                        
+                        // 4. 隐藏过渡头像并显示最终头像
+                        setTimeout(() => {
+                            avatarTransition.classList.add('hidden');
+                            
+                            // 5. 显示格言
+                            setTimeout(() => {
+                                updateQuote();
+                                document.getElementById('quote-container').classList.add('show');
+                                
+                                // 6. 逐个显示社交图标
+                                const socialIcons = document.querySelectorAll('.social-icon');
+                                socialIcons.forEach((icon, index) => {
+                                    setTimeout(() => {
+                                        icon.classList.add('show');
+                                    }, index * 200);
+                                });
+                                
+                                // 7. 显示卡片
+                                renderCards();
+                                
+                            }, 500);
+                        }, 800);
+                    }, 800);
+                }, 800);
+            }, 1500);
+        }
+        
+        // 页面加载时初始化所有内容
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAvatar();
+            startAnimationSequence();
+            
+            // 点击格言区域可以更换格言
+            document.getElementById('quote-container').addEventListener('click', updateQuote);
+            
+            // 每30秒自动更换格言
+            setInterval(updateQuote, 30000);
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=ABCreatoris/homepage" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
