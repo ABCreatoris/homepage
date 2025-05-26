@@ -158,11 +158,29 @@
         }
         
         .email-icon {
-            color: #EA4335;
+            color: #708090;
         }
         
         .email-icon:hover {
-            color: #D33426;
+            color: #36454F;
+        }
+        
+        .weibo-icon {
+            color: #E6162D; /* 让图标保持默认颜色 */
+            background: none; /* 移除背景渐变 */
+            -webkit-background-clip: unset; /* 移除背景剪裁 */
+            -webkit-text-fill-color: unset; /* 恢复文本填充的默认颜色 */
+        }
+        .weibo-icon:hover {
+            color: #C7172A; /* 让图标悬停时颜色也保持默认 */ 
+        }
+        
+        .bilibili-icon {
+            color: #FB7299;
+        }
+        
+        .bilibili-icon:hover {
+            color: #FF85AD;
         }
         
         .card-icon {
@@ -297,7 +315,7 @@
             </div>
             
             <!-- 社交图标 -->
-            <div id="social-icons" class="flex space-x-6">
+            <div id="social-icons" class="flex flex-wrap justify-center gap-6">
                 <a href="https://github.com/chenxinyu" target="_blank" rel="noopener noreferrer" class="social-icon github-icon text-4xl">
                     <i class="fab fa-github"></i>
                 </a>
@@ -309,6 +327,12 @@
                 </a>
                 <a href="#" class="social-icon qq-icon text-4xl">
                     <i class="fab fa-qq"></i>
+                </a>
+                <a href="https://weibo.com/u/chenxinyu" target="_blank" rel="noopener noreferrer" class="social-icon weibo-icon text-4xl">
+                    <i class="fab fa-weibo"></i>
+                </a>
+                <a href="https://www.bilibili.com" target="_blank" rel="noopener noreferrer" class="social-icon bilibili-icon text-4xl">
+                    <i class="fab fa-bilibili"></i>
                 </a>
                 <a href="mailto:chenxinyu@example.com" class="social-icon email-icon text-4xl">
                     <i class="fas fa-envelope"></i>
@@ -334,73 +358,73 @@
             { text: "人生就像骑自行车，为了保持平衡，你必须保持前进。", author: "阿尔伯特·爱因斯坦" }
         ];
         
-        // 卡片数据
+        // 卡片数据 - 更新为技术博客、文档、简历和联系我
         const cards = [
             { 
-                title: "我的论文", 
-                description: "查看我发表的学术论文和研究", 
-                icon: "file-alt", 
-                buttonText: "阅读论文", 
-                gradientFrom: "blue-500", 
-                gradientTo: "indigo-500", 
-                buttonColor: "blue-500", 
-                buttonHover: "blue-600",
-                url: "#"
-            },
-            { 
-                title: "开源项目", 
-                description: "探索我贡献的开源AI项目", 
-                icon: "code-branch", 
-                buttonText: "查看代码", 
-                gradientFrom: "purple-500", 
-                gradientTo: "pink-500", 
-                buttonColor: "purple-500", 
-                buttonHover: "purple-600",
-                url: "#"
-            },
-            { 
                 title: "技术博客", 
-                description: "阅读我的AI技术文章和教程", 
+                description: "分享我的技术见解和学习心得", 
                 icon: "blog", 
-                buttonText: "阅读文章", 
-                gradientFrom: "green-500", 
-                gradientTo: "teal-500", 
+                buttonText: "阅读博客", 
+                gradientFrom: "purple-500", 
+                gradientTo: "indigo-300", 
+                buttonColor: "purple-500", 
+                buttonHover: "purple-500",
+                url: "#"
+            },
+            { 
+                title: "文档指南", 
+                description: "查看我整理的技术文档和指南", 
+                icon: "file-alt", 
+                buttonText: "查看文档", 
+                gradientFrom: "blue-400", 
+                gradientTo: "blue-200", 
+                buttonColor: "blue-600", 
+                buttonHover: "blue-700",
+                url: "#"
+            },
+            { 
+                title: "心得小记", 
+                description: "偷看我的心得体会和进阶历程", 
+                icon: "code-branch", 
+                buttonText: "peek心得", 
+                gradientFrom: "green-400", 
+                gradientTo: "teal-200", 
                 buttonColor: "green-500", 
                 buttonHover: "green-600",
                 url: "#"
             },
             { 
-                title: "会议演讲", 
-                description: "观看我在AI会议上的演讲", 
-                icon: "video", 
-                buttonText: "观看视频", 
-                gradientFrom: "red-500", 
-                gradientTo: "orange-500", 
-                buttonColor: "red-500", 
-                buttonHover: "red-600",
-                url: "#"
+                title: "我的简历", 
+                description: "了解我的教育背景和工作经历", 
+                icon: "id-card", 
+                buttonText: "访问GitHub", 
+                gradientFrom: "orange-400", 
+                gradientTo: "yellow-200", 
+                buttonColor: "orange-600", 
+                buttonHover: "orange-700",
+                url: "https://github.com/chenxinyu"
             },
             { 
-                title: "Hugging Face", 
-                description: "访问我的Hugging Face个人资料", 
-                icon: "robot", 
-                buttonText: "查看资料", 
-                gradientFrom: "yellow-500", 
-                gradientTo: "amber-500", 
-                buttonColor: "yellow-500", 
-                buttonHover: "yellow-600",
-                url: "https://huggingface.co/chenxinyu"
+                title: "个人软件", 
+                description: "下载尝试我编写的独立软件", 
+                icon: "laptop", 
+                buttonText: "前往查看", 
+                gradientFrom: "pink-500", 
+                gradientTo: "blue-200", 
+                buttonColor: "pink-500", 
+                buttonHover: "pink-600",
+                url: "https://linkedin.com/in/chenxinyu"
             },
             { 
                 title: "联系我", 
                 description: "发送合作或咨询请求", 
                 icon: "envelope", 
                 buttonText: "发送消息", 
-                gradientFrom: "indigo-500", 
-                gradientTo: "violet-500", 
-                buttonColor: "indigo-500", 
-                buttonHover: "indigo-600",
-                url: "#"
+                gradientFrom: "red-400", 
+                gradientTo: "orange-300", 
+                buttonColor: "red-500", 
+                buttonHover: "red-600",
+                url: "mailto:chenxinyu@example.com"
             }
         ];
         
