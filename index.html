@@ -2,11 +2,12 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>陈新钰的个人主页</title>
+    <!-- 官方TailwindCSS CDN，保证样式不乱 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 用 bootcdn -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @keyframes swing {
             0%, 100% { transform: rotate(0deg); }
@@ -96,7 +97,7 @@
         }
         
         body {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
             font-weight: 400;
             line-height: 1.6;
             overflow-x: hidden;
@@ -168,7 +169,6 @@
         .weibo-icon {
             color: #E6162D; /* 让图标保持默认颜色 */
             background: none; /* 移除背景渐变 */
-            -webkit-background-clip: unset; /* 移除背景剪裁 */
             -webkit-text-fill-color: unset; /* 恢复文本填充的默认颜色 */
         }
         .weibo-icon:hover {
@@ -264,6 +264,70 @@
             height: 100%;
             object-fit: cover;
         }
+        
+        /* 添加移动端响应式样式 */
+        @media (max-width: 640px) {
+            .social-icons-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+            
+            .social-icon {
+                margin: 0.5rem;
+            }
+            
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            
+            .card {
+                margin: 1rem 0;
+                width: 100%;
+            }
+            
+            .initial-avatar {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .initial-name {
+                font-size: 2rem;
+            }
+            
+            .initial-title {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* 确保页面不会水平滚动 */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+        
+        /* 调整容器最大宽度 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .avatar-img {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .avatar-img.loaded {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
@@ -273,7 +337,7 @@
             <img id="profile-avatar" 
                  src="https://foruda.gitee.com/avatar/1748226361206753749/15870069_abcreatoris_1748226361.png" 
                  alt="陈新钰的头像" 
-                 class="w-full h-full object-cover"
+                 class="w-full h-full object-cover avatar-img"
                  onerror="this.src='https://cdn-avatars.huggingface.co/v1/production/uploads/noauth/R1mAu5TR8RGL8Ig0d0bd4.jpeg'">
         </div>
         
@@ -288,6 +352,7 @@
         <img id="transition-avatar" 
              src="https://foruda.gitee.com/avatar/1748226361206753749/15870069_abcreatoris_1748226361.png" 
              alt="陈新钰的头像"
+             class="avatar-img"
              onerror="this.src='https://cdn-avatars.huggingface.co/v1/production/uploads/noauth/R1mAu5TR8RGL8Ig0d0bd4.jpeg'">
     </div>
     
@@ -299,7 +364,7 @@
                 <img id="final-avatar" 
                      src="https://foruda.gitee.com/avatar/1748226361206753749/15870069_abcreatoris_1748226361.png" 
                      alt="陈新钰的头像" 
-                     class="w-full h-full object-cover"
+                     class="w-full h-full object-cover avatar-img"
                      onerror="this.src='https://cdn-avatars.huggingface.co/v1/production/uploads/noauth/R1mAu5TR8RGL8Ig0d0bd4.jpeg'">
             </div>
             
@@ -315,28 +380,13 @@
             </div>
             
             <!-- 社交图标 -->
-            <div id="social-icons" class="flex flex-wrap justify-center gap-6">
-                <a href="https://github.com/chenxinyu" target="_blank" rel="noopener noreferrer" class="social-icon github-icon text-4xl">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://linkedin.com/in/chenxinyu" target="_blank" rel="noopener noreferrer" class="social-icon linkedin-icon text-4xl">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="#" class="social-icon wechat-icon text-4xl">
-                    <i class="fab fa-weixin"></i>
-                </a>
-                <a href="#" class="social-icon qq-icon text-4xl">
-                    <i class="fab fa-qq"></i>
-                </a>
-                <a href="https://weibo.com/u/chenxinyu" target="_blank" rel="noopener noreferrer" class="social-icon weibo-icon text-4xl">
-                    <i class="fab fa-weibo"></i>
-                </a>
-                <a href="https://www.bilibili.com" target="_blank" rel="noopener noreferrer" class="social-icon bilibili-icon text-4xl">
-                    <i class="fab fa-bilibili"></i>
-                </a>
-                <a href="mailto:chenxinyu@example.com" class="social-icon email-icon text-4xl">
-                    <i class="fas fa-envelope"></i>
-                </a>
+            <div id="social-icons"
+                 class="flex flex-wrap justify-center items-center w-full max-w-full
+                        gap-x-2 gap-y-2
+                        sm:gap-x-4 sm:gap-y-3
+                        md:gap-x-6 md:gap-y-4
+                        lg:gap-x-8 lg:gap-y-5
+                        xl:gap-x-10 xl:gap-y-6">
             </div>
         </div>
         
@@ -586,5 +636,85 @@
             // 每30秒自动更换格言
             setInterval(updateQuote, 30000);
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var avatars = document.querySelectorAll('.avatar-img');
+            avatars.forEach(function(avatar) {
+                if (avatar.complete) {
+                    avatar.classList.add('loaded');
+                } else {
+                    avatar.addEventListener('load', function() {
+                        avatar.classList.add('loaded');
+                    });
+                }
+            });
+        });
+
+        const socialLinks = [
+            {
+                href: "https://github.com/chenxinyu",
+                icon: "fab fa-github",
+                class: "github-icon",
+                label: "GitHub"
+            },
+            {
+                href: "https://linkedin.com/in/chenxinyu",
+                icon: "fab fa-linkedin",
+                class: "linkedin-icon",
+                label: "LinkedIn"
+            },
+            {
+                href: "#",
+                icon: "fab fa-weixin",
+                class: "wechat-icon",
+                label: "WeChat"
+            },
+            {
+                href: "#",
+                icon: "fab fa-qq",
+                class: "qq-icon",
+                label: "QQ"
+            },
+            {
+                href: "https://weibo.com/u/chenxinyu",
+                icon: "fab fa-weibo",
+                class: "weibo-icon",
+                label: "Weibo"
+            },
+            {
+                href: "https://www.bilibili.com",
+                icon: "fab fa-bilibili",
+                class: "bilibili-icon",
+                label: "Bilibili"
+            },
+            {
+                href: "mailto:chenxinyu@example.com",
+                icon: "fas fa-envelope",
+                class: "email-icon",
+                label: "Email"
+            }
+        ];
+
+        function renderSocialIcons() {
+            const container = document.getElementById('social-icons');
+            container.innerHTML = '';
+            socialLinks.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.href;
+                a.target = "_blank";
+                a.rel = "noopener noreferrer";
+                a.className = `social-icon ${link.class} text-3xl sm:text-4xl`;
+                a.setAttribute('aria-label', link.label);
+                const i = document.createElement('i');
+                i.className = link.icon;
+                a.appendChild(i);
+                container.appendChild(a);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSocialIcons();
+        });
     </script>
+</body>
 </html>
