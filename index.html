@@ -110,9 +110,61 @@
             letter-spacing: -0.025em;
         }
         
+        /* 国内外可用字体源 */
+        /* 1. 站酷庆科黄油体（手写风格，国内源） */
+        @import url('https://fonts.geekzu.org/earlyaccess/zcoolkuaile.css');
+        /* 2. 阿里巴巴普惠体（衬线体，国内源） */
+        @font-face {
+            font-family: 'Alibaba PuHuiTi';
+            src: url('./fonts/Alibaba-PuHuiTi-Regular.ttf') format('truetype');
+            font-display: swap;
+        }
+        /* 3. Google Fonts 备用（国外源） */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        
+        /* 本地加载文艺与艺术字体 */
+        @font-face {
+            font-family: 'ZCOOL WenYi';
+            src: url('./fonts/zhankuwenyi.ttf') format('truetype');
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'ZCOOL Happy';
+            src: url('./fonts/zhankuhappy.ttf') format('truetype');
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'ZCOOL Addict Italic 01';
+            src: url('./fonts/ZCOOL Addict Italic 01.ttf') format('truetype');
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'ZCOOL Addict Italic 02';
+            src: url('./fonts/ZCOOL Addict Italic 02.ttf') format('truetype');
+            font-display: swap;
+        }
+        
         .font-quote {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
-            font-weight: 300;
+            font-family: 'ZCOOL Happy', 'ZCOOL Addict Italic 01', 'ZCOOL Addict Italic 02', 'Alibaba PuHuiTi', 'Noto Serif SC', 'Zhi Mang Xing', 'Pacifico', 'FZShuTi', 'STKaiti', 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            font-size: 1.25rem;
+        }
+        @media (min-width: 768px) {
+            .font-quote {
+                font-size: 1.75rem;
+            }
+        }
+        @media (min-width: 1280px) {
+            .font-quote {
+                font-size: 2.25rem;
+            }
+        }
+        .font-quote:lang(en), .font-quote *:lang(en) {
+            font-family: 'ZCOOL WenYi', 'Georgia', 'Times New Roman', serif;
             font-style: italic;
         }
         
@@ -400,12 +452,13 @@
     <script>
         // 格言列表
         const quotes = [
-            { text: "生活就像一盒巧克力，你永远不知道下一颗是什么味道。", author: "阿甘正传" },
-            { text: "成功的秘诀在于对目标的坚定不移。", author: "本杰明·迪斯雷利" },
-            { text: "不要等待机会，而要创造机会。", author: "乔治·伯纳德·肖" },
-            { text: "人生最大的快乐不在于占有什么，而在于追求什么的过程。", author: "罗伯特·威廉·本生" },
-            { text: "生活不是等待暴风雨过去，而是学会在雨中跳舞。", author: "维维安·格林" },
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+            { text: "取乎其上，得乎其中；取乎其中，得乎其下；取乎其下，则无所得矣。", author: "《孟子·告天下》" },
+            { text: "Shoot for the moon. Even if you miss, you'll land among the stars.", author: "Norman Vincent Peale" },
             { text: "昨天是历史，明天是谜团，而今天是礼物。", author: "功夫熊猫" },
+            { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
+            { text: "志不求易者成，事不避难者进", author: "冯梦龙"},
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
             { text: "人生就像骑自行车，为了保持平衡，你必须保持前进。", author: "阿尔伯特·爱因斯坦" }
         ];
         
@@ -485,10 +538,21 @@
             return quotes[randomIndex];
         }
         
+        // 判断是否英文
+        function isEnglish(text) {
+            return /^[A-Za-z0-9\s.,'"!?;:()\-]+$/.test(text);
+        }
+        
         // 更新格言显示
         function updateQuote() {
             const quote = getRandomQuote();
-            document.getElementById('quote').textContent = `"${quote.text}"`;
+            const quoteElem = document.getElementById('quote');
+            quoteElem.textContent = `${quote.text}`;
+            if (isEnglish(quote.text)) {
+                quoteElem.setAttribute('lang', 'en');
+            } else {
+                quoteElem.removeAttribute('lang');
+            }
             document.getElementById('quote-author').textContent = `- ${quote.author}`;
         }
         
