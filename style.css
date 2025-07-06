@@ -1,3 +1,75 @@
+@font-face {
+	font-family: 'Nunito';
+	src: url('./fonts/Nunito-VariableFont_wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Nunito';
+	src: url('./fonts/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Archivo';
+	src: url('./fonts/Archivo-VariableFont_wdth,wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Archivo';
+	src: url('./fonts/Archivo-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Uoq';
+	src: url('./fonts/UoqMunThenKhung-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'WenYi';
+	src: url('./fonts/zhankuwenyi.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Happy';
+	src: url('./fonts/zhankuhappy.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Alibaba PuHuiTi';
+	src: url('./fonts/Alibaba-PuHuiTi-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+body, html {
+	font-family: 'Nunito', 'Archivo', 'Uoq', 'WenYi', 'Happy', 'Alibaba PuHuiTi', sans-serif;
+}
+
+.font-quote {
+	font-family: 'Uoq', 'Nunito', 'Archivo', 'WenYi', 'Happy', 'Alibaba PuHuiTi', sans-serif;
+}
+.font-quote:lang(zh),
+.font-quote:lang(zh-CN),
+.font-quote:lang(zh-Hans),
+.font-quote:lang(en),
+.font-quote *:lang(en) {
+	font-family: 'Uoq', 'Nunito', 'Archivo', 'WenYi', 'Happy', 'Alibaba PuHuiTi', sans-serif;
+}
+
 body {
 	padding: 2rem;
 	font-family: -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
