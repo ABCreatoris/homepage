@@ -1,0 +1,122 @@
+{
+  "ui": {
+    "htmlLang": "zh-CN",
+    "pageTitle": "陈新钰的个人主页",
+    "nameDisplay": "陈新钰",
+    "tagline": "软件开发者",
+    "avatarAlt": "陈新钰的头像",
+    "socialNavAria": "社交网络",
+    "linksSectionAria": "链接与作品",
+    "contentLinksNavAria": "站内与常用链接",
+    "quoteSectionAria": "引言",
+    "quoteToggleAria": "点击或按回车切换至下一条引言",
+    "quoteToggleTitle": "点击切换下一条"
+  },
+  "social": [
+    {
+      "href": "https://github.com/ABCreatoris",
+      "label": "GitHub",
+      "iconClass": "fab fa-github",
+      "cssClass": "github-icon"
+    },
+    {
+      "href": "https://www.linkedin.com/in/abcreatoris",
+      "label": "LinkedIn",
+      "iconClass": "fab fa-linkedin",
+      "cssClass": "linkedin-icon"
+    },
+    {
+      "href": "#",
+      "label": "微信",
+      "iconClass": "fab fa-weixin",
+      "cssClass": "wechat-icon",
+      "iconKind": "wechat",
+      "wechatId": "abcreatoris"
+    },
+    {
+      "href": "#",
+      "label": "QQ",
+      "iconClass": "fab fa-qq",
+      "cssClass": "qq-icon",
+      "iconKind": "qq",
+      "qqUin": "2740686056"
+    },
+    {
+      "href": "https://weibo.com/abcreatoris",
+      "label": "微博",
+      "iconClass": "fab fa-weibo",
+      "cssClass": "weibo-icon"
+    },
+    {
+      "href": "https://www.xiaohongshu.com/user/profile/6400943d000000002a009115",
+      "label": "小红书",
+      "iconKind": "xiaohongshu",
+      "cssClass": "xiaohongshu-icon"
+    },
+    {
+      "href": "https://space.bilibili.com/3546772678904651",
+      "label": "哔哩哔哩",
+      "iconClass": "fab fa-bilibili",
+      "cssClass": "bilibili-icon"
+    },
+    {
+      "href": "mailto:chenxinyu@abcreatoris.com",
+      "label": "邮箱",
+      "iconClass": "fas fa-envelope",
+      "cssClass": "email-icon"
+    }
+  ],
+  "contentLinks": [
+    {
+      "title": "技术博客",
+      "description": "技术见解与学习记录",
+      "url": "https://blog.abcreatoris.com"
+    },
+    {
+      "title": "文档指南",
+      "description": "整理的文档与笔记索引",
+      "url": "#"
+    },
+    {
+      "title": "心得小记",
+      "description": "随笔与进阶备忘",
+      "url": "#"
+    },
+    {
+      "title": "个人软件",
+      "description": "独立小工具与下载",
+      "url": "https://www.linkedin.com/in/abcreatoris"
+    },
+    {
+      "title": "联系我",
+      "description": "合作或咨询邮件",
+      "url": "mailto:chenxinyu@abcreatoris.com"
+    }
+  ],
+  "quotes": [
+    {
+      "text": "取乎其上，得乎其中；取乎其中，得乎其下；取乎其下，则无所得矣。",
+      "author": "《孟子·告天下》"
+    },
+    {
+      "text": "昨天是历史，明天是谜团，而今天是礼物。",
+      "author": "功夫熊猫"
+    },
+    {
+      "text": "志不求易者成，事不避难者进。",
+      "author": "冯梦龙"
+    },
+    {
+      "text": "人生就像骑自行车，为了保持平衡，你必须保持前进。",
+      "author": "阿尔伯特·爱因斯坦"
+    },
+    {
+      "text": "求知若饥，虚心若愚。",
+      "author": "Steve Jobs"
+    },
+    {
+      "text": "成功并非终点，失败也并非末日，真正可贵的是继续前进的勇气。",
+      "author": "温斯顿·丘吉尔"
+    }
+  ]
+}

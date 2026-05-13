@@ -4,96 +4,558 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>陈新钰的个人主页</title>
+    <!-- 内联 favicon，避免在 / 目录列表、子路径部署时相对路径解析错误导致 404 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230066cc'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAICAAAAEAIABhAAAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAgAAAAIAgCAAAA/BjtowAAAChJREFUeNrtzTENAAAIA7CpRS2ipoKDpEn/JrO3BAKBQCAQCAQCwZegDtXIPTrZwzMAAAAASUVORK5CYII=">
     <!-- 仅加载本地TailwindCSS JS -->
     <script src="tailwindcss.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome 用 bootcdn -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @keyframes swing {
-            0%, 100% { transform: rotate(0deg); }
-            20% { transform: rotate(15deg); }
-            40% { transform: rotate(-10deg); }
-            60% { transform: rotate(5deg); }
-            80% { transform: rotate(-5deg); }
-        }
-        
         .social-icon {
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.35s ease;
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateY(8px);
         }
         
         .social-icon.show {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateY(0);
         }
         
         .social-icon:hover {
-            animation: swing 0.6s ease;
-            animation-iteration-count: 1;
+            opacity: 0.65;
+        }
+
+        /* 社交图标：单行；字号用固定阶梯，不用多级 clamp */
+        #social-icons {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            box-sizing: border-box;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        #social-icons::-webkit-scrollbar {
+            display: none;
+        }
+
+        #social-icons .social-icon {
+            flex-shrink: 0;
+            margin: 0;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        @media (max-width: 640px) {
+            #social-icons {
+                gap: 0.45rem;
+                padding-left: 0.35rem;
+                padding-right: 0.35rem;
+            }
+
+            #social-icons .social-icon {
+                font-size: 1.625rem;
+            }
+
+            /* 窄屏链接：居中、大留白、短分割线 — 偏「版式」而非工具列表 */
+            .content-links {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: flex-start;
+                max-width: min(23rem, 94vw);
+                gap: 0;
+                margin-top: 0.75rem;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 0.25rem 0.75rem 0.5rem;
+                font-size: 1rem;
+                line-height: 1.55;
+                background: none;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .content-links__sep {
+                display: none;
+            }
+
+            .content-links__a {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+                width: 100%;
+                max-width: 20rem;
+                text-align: center;
+                text-decoration: none;
+                padding: 1.2rem 1rem 1.35rem;
+                min-height: 0;
+                border-radius: 0;
+                background: transparent;
+                border: none;
+                font-weight: 500;
+                color: #1d1d1f;
+                box-shadow: none;
+                position: relative;
+                transition: color 0.2s ease, opacity 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .content-links__a ~ .content-links__a::before {
+                content: '';
+                display: block;
+                width: min(3.25rem, 28vw);
+                height: 1px;
+                margin: 0 auto 0.15rem;
+                background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent);
+            }
+
+            .content-links__a:hover {
+                text-decoration: none;
+                color: #0066cc;
+                background: transparent;
+            }
+
+            .content-links__a:focus-visible {
+                text-decoration: none;
+                color: #0066cc;
+                background: rgba(0, 0, 0, 0.025);
+                outline: 2px solid rgba(0, 102, 204, 0.3);
+                outline-offset: 4px;
+                border-radius: 4px;
+            }
+
+            .content-links__a:hover .content-links__title,
+            .content-links__a:focus-visible .content-links__title {
+                color: #0066cc;
+            }
+
+            .content-links__a:hover .content-links__desc,
+            .content-links__a:focus-visible .content-links__desc {
+                color: #6e6e73;
+            }
+
+            .content-links__a:active {
+                opacity: 0.92;
+            }
+
+            .content-links__title {
+                display: block;
+                font-size: 1.0625rem;
+                font-weight: 500;
+                letter-spacing: 0.04em;
+                line-height: 1.45;
+                color: inherit;
+            }
+
+            .content-links__desc {
+                display: block;
+                margin-top: 0.45rem;
+                font-size: 0.8125rem;
+                font-weight: 400;
+                letter-spacing: 0.02em;
+                color: #8e8e93;
+                line-height: 1.55;
+                max-width: 19rem;
+            }
+
+            .content-links__desc:empty {
+                display: none;
+            }
+
+            .page-shell {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .initial-avatar {
+                width: 150px;
+                height: 150px;
+            }
+
+            .initial-name {
+                font-size: 1.875rem;
+            }
+
+            .initial-title {
+                font-size: 1.0625rem;
+            }
+        }
+
+        @media (min-width: 640px) {
+            #social-icons {
+                gap: 1.25rem;
+                overflow-x: visible;
+            }
+
+            #social-icons .social-icon {
+                font-size: 1.75rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            #social-icons {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            #social-icons .social-icon {
+                font-size: 2rem;
+            }
         }
         
         .card {
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
+            transition: opacity 0.35s ease, transform 0.35s ease;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(12px);
         }
         
         .card.show {
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* 正文链接 */
+        .content-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.35rem 0.2rem;
+            width: 100%;
+            max-width: 36rem;
+            margin: 0.35rem auto 0;
+            padding: 0.25rem 0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .content-links__sep {
+            color: #c7c7cc;
+            user-select: none;
+            padding: 0 0.15rem;
+        }
+
+        .content-links__title {
+            display: inline;
+        }
+
+        .content-links__desc {
+            display: none;
+        }
+
+        .content-links__a {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.2rem 0.15rem;
+            border-radius: 4px;
+            transition: color 0.15s ease, text-decoration-color 0.15s ease;
+        }
+
+        @media (min-width: 641px) {
+            .content-links__a:hover {
+                color: #004499;
+                text-decoration: underline;
+                text-underline-offset: 0.2em;
+            }
+        }
+
+        .content-links__a:focus {
+            outline: none;
+        }
+
+        @media (min-width: 641px) {
+            .content-links__a:focus-visible {
+                outline: 2px solid rgba(0, 102, 204, 0.45);
+                outline-offset: 2px;
+            }
+        }
+
+        .content-links .card {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .content-links .card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
         
-        .card:hover {
-            transform: translateY(-5px) rotateX(5deg) !important;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        /* 主栏：略收窄，段落更易读 */
+        .page-shell {
+            max-width: 52rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+        }
+        
+        @media (min-width: 640px) {
+            .page-shell {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+        
+        /* 区块之间只用间距拉节奏，避免多条横线切碎版面 */
+        .layout-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 3.25rem;
+        }
+        
+        @media (min-width: 768px) {
+            .layout-stack {
+                gap: 4.5rem;
+            }
+        }
+
+        /* 主栏一屏收尾：压缩纵向节奏；引言区不再吸底 */
+        #main-content.layout-stack {
+            min-height: 100vh;
+            min-height: 100dvh;
+            box-sizing: border-box;
+            gap: clamp(1rem, 3vh, 2.25rem);
+        }
+
+        @media (min-width: 768px) {
+            #main-content.layout-stack {
+                gap: clamp(1.25rem, 3.5vh, 2.75rem);
+            }
+        }
+
+        #quote-section {
+            width: 100%;
+            max-width: 34rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 0.35rem;
+            padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+        }
+
+        @media (max-height: 720px) {
+            #main-content.layout-stack {
+                gap: 0.75rem;
+            }
+
+            .font-quote {
+                font-size: clamp(1.0625rem, 2.1vw + 0.45rem, 1.3125rem);
+            }
+
+            .quote-attribution {
+                margin-top: 0.65rem;
+            }
+        }
+        
+        .hero-title {
+            font-size: clamp(2.125rem, 5.5vw, 3.25rem);
+            line-height: 1.06;
+            letter-spacing: -0.038em;
+        }
+        
+        .section-eyebrow {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #86868b;
+            text-align: center;
+            margin: 0 0 1.125rem;
+        }
+        
+        .section-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #86868b;
+            text-align: center;
+            margin: 0 0 1.75rem;
         }
         
         .quote-container {
             position: relative;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(8px);
+            transition: opacity 0.75s cubic-bezier(0.25, 0.1, 0.25, 1),
+                transform 0.75s cubic-bezier(0.25, 0.1, 0.25, 1);
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0.35rem 0.5rem 0.5rem;
+            text-align: center;
+            perspective: 560px;
+            -webkit-tap-highlight-color: transparent;
         }
-        
+
+        .quote-container:focus {
+            outline: none;
+        }
+
+        .quote-container:focus-visible {
+            outline: 2px solid rgba(99, 102, 241, 0.4);
+            outline-offset: 4px;
+            border-radius: 10px;
+        }
+
         .quote-container.show {
             opacity: 1;
             transform: translateY(0);
         }
-        
-        .quote-container::before, .quote-container::after {
-            content: '"';
-            font-size: 3rem;
-            color: rgba(156, 163, 175, 0.3);
+
+        /* 成对引号：挂在正文块左上角 / 右下角，不占单独一行 */
+        #quote.font-quote {
+            position: relative;
+            padding-left: 0.65em;
+            padding-right: 0.65em;
+        }
+
+        #quote.font-quote::before,
+        #quote.font-quote::after {
             position: absolute;
+            font-family: 'Times New Roman', 'Songti SC', 'STSong', Georgia, 'Palatino Linotype', serif;
+            font-size: 1.42em;
+            line-height: 1;
+            font-weight: 400;
+            color: rgba(99, 102, 241, 0.28);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.55s ease 0.1s;
+        }
+
+        .quote-container.show #quote.font-quote::before,
+        .quote-container.show #quote.font-quote::after {
+            opacity: 1;
+        }
+
+        #quote.font-quote::before {
+            content: '\201C';
+            left: 0;
+            top: 0.02em;
+        }
+
+        #quote.font-quote::after {
+            content: '\201D';
+            right: 0;
+            bottom: 0.08em;
+        }
+
+        #quote.font-quote .quote-glyph {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 逐词/逐字：略轻的模糊与倾角，适配小字号 */
+        .quote-glyph {
+            display: inline-block;
+            opacity: 0;
+            transform-origin: 50% 100%;
+            filter: blur(7px);
+            transform: translateY(0.28em) rotateX(-34deg);
+        }
+
+        .quote-container.quote-play .quote-glyph {
+            animation: quoteGlyphReveal 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: calc(var(--qi, 0) * 36ms);
+        }
+
+        @keyframes quoteGlyphReveal {
+            to {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0) rotateX(0deg);
+            }
+        }
+
+        #quote-author {
+            opacity: 0;
+            transform: translateY(6px);
+            filter: blur(6px);
+        }
+
+        .quote-container.quote-play #quote-author {
+            animation: quoteAuthorReveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: var(--quote-author-delay, 0.45s);
+        }
+
+        @keyframes quoteAuthorReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .quote-container.show #quote.font-quote::before,
+            .quote-container.show #quote.font-quote::after {
+                opacity: 1;
+                transition: none;
+            }
+
+            .quote-container.quote-play .quote-glyph {
+                animation: none;
+                opacity: 1;
+                filter: none;
+                transform: none;
+            }
+
+            #quote-author {
+                opacity: 1;
+                filter: none;
+                transform: none;
+            }
+
+            .quote-container.quote-play #quote-author {
+                animation: none;
+            }
         }
         
-        .quote-container::before {
-            top: -20px;
-            left: -30px;
-        }
-        
-        .quote-container::after {
-            bottom: -50px;
-            right: -30px;
-        }
-        
-        .avatar {
+        /* 开场头像保留装饰环；正文区内头像改为干净阴影 */
+        .initial-layout .avatar,
+        .avatar-transition {
             box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8), 0 0 0 10px rgba(156, 163, 175, 0.2);
-            transition: all 0.3s ease;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
         }
         
-        .avatar:hover {
+        .initial-layout .avatar:hover {
             transform: scale(1.05);
             box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.9), 0 0 0 16px rgba(156, 163, 175, 0.3);
         }
         
+        #main-content .avatar {
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        
+        #main-content .avatar:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+        }
+        
         .name-highlight {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #1d1d1f;
             display: inline-block;
         }
         
@@ -105,54 +567,51 @@
         }
         
         .font-display {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.025em;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.03em;
         }
         
-        /* 国内外可用字体源 */
-        /* 1. 站酷庆科黄油体（手写风格，国内源） */
-        /* 2. 阿里巴巴普惠体（衬线体，国内源） */
-        @font-face {
-            font-family: 'Alibaba PuHuiTi';
-            src: url('./fonts/Alibaba-PuHuiTi-Regular.ttf') format('truetype');
-            font-display: swap;
-        }
-        /* 3. Google Fonts 备用（国外源） */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-        
+        /* 引言：小于主标题，但保持正文级易读（约 18～23px） */
         .font-quote {
-            font-family: 'ZCOOL Happy', 'ZCOOL Addict Italic 01', 'ZCOOL Addict Italic 02', 'Alibaba PuHuiTi', 'Noto Serif SC', 'Zhi Mang Xing', 'Pacifico', 'FZShuTi', 'STKaiti', 'Georgia', 'Times New Roman', serif;
-            font-style: italic;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.015em;
+            font-size: clamp(1.125rem, 2.35vw + 0.55rem, 1.4375rem);
+            line-height: 1.5;
+            color: rgba(29, 29, 31, 0.9);
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        
+        .font-quote:lang(en) {
+            letter-spacing: -0.015em;
             font-weight: 400;
-            letter-spacing: 0.5px;
-            font-size: 1.25rem;
         }
-        @media (min-width: 768px) {
-            .font-quote {
-                font-size: 1.75rem;
-            }
+        
+        .quote-attribution {
+            margin-top: 0.85rem;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            color: rgba(72, 72, 78, 0.95);
         }
-        @media (min-width: 1280px) {
-            .font-quote {
-                font-size: 2.25rem;
-            }
-        }
-        .font-quote:lang(en), .font-quote *:lang(en) {
-            font-family: 'ZCOOL WenYi', 'Georgia', 'Times New Roman', serif;
-            font-style: italic;
+        
+        .quote-attribution.quote-attribution-cn {
+            letter-spacing: 0.1em;
+            font-size: 0.875rem;
         }
         
         .font-card-title {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
             font-weight: 600;
             letter-spacing: -0.015em;
         }
         
         .font-card-content {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
             font-weight: 400;
         }
         
@@ -212,13 +671,19 @@
         .bilibili-icon:hover {
             color: #FF85AD;
         }
-        
-        .card-icon {
-            transition: all 0.3s ease;
+
+        .xiaohongshu-icon {
+            color: #ff2442;
         }
-        
-        .card:hover .card-icon {
-            transform: scale(1.1);
+
+        .xiaohongshu-icon:hover {
+            color: #e61e3d;
+        }
+
+        .social-icon .xhs-svg {
+            display: block;
+            width: 1em;
+            height: 1em;
         }
         
         /* 初始布局样式 */
@@ -277,7 +742,7 @@
             opacity: 1;
         }
         
-        /* 头像过渡动画 */
+        /* 头像过渡动画：不拦截点击，避免盖住主内容期间邮箱等链接无法点 */
         .avatar-transition {
             position: fixed;
             width: 200px;
@@ -285,6 +750,7 @@
             border-radius: 50%;
             overflow: hidden;
             z-index: 20;
+            pointer-events: none;
             transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8), 0 0 0 10px rgba(156, 163, 175, 0.2);
         }
@@ -295,47 +761,15 @@
             object-fit: cover;
         }
         
-        /* 添加移动端响应式样式 */
-        @media (max-width: 640px) {
-            .social-icons-container {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
-                padding: 0 1rem;
-            }
-            
-            .social-icon {
-                margin: 0.5rem;
-            }
-            
-            .container {
-                padding-left: 1rem;
-                padding-right: 1rem;
-                width: 100%;
-                max-width: 100%;
-                overflow-x: hidden;
-            }
-            
-            .card {
-                margin: 1rem 0;
-                width: 100%;
-            }
-            
-            .initial-avatar {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .initial-name {
-                font-size: 2rem;
-            }
-            
-            .initial-title {
-                font-size: 1.2rem;
-            }
+        /* 淡雅底衬，衬托磨砂卡片 */
+        body.min-h-screen.antialiased {
+            background-color: #f2f2f6;
+            background-image:
+                radial-gradient(ellipse 120% 55% at 50% -25%, rgba(255, 255, 255, 0.85), transparent 52%),
+                radial-gradient(ellipse 55% 38% at 95% 35%, rgba(220, 225, 238, 0.35), transparent 58%),
+                radial-gradient(ellipse 50% 36% at 6% 65%, rgba(228, 230, 240, 0.4), transparent 56%);
         }
-        
+
         /* 确保页面不会水平滚动 */
         html, body {
             overflow-x: hidden;
@@ -343,24 +777,51 @@
             position: relative;
         }
         
-        /* 调整容器最大宽度 */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        
         .avatar-img {
             opacity: 0;
             transition: opacity 0.5s;
+        }
+
+        /* 开场头像：不依赖 load 事件才显示，避免 complete/error 竞态导致一直透明 */
+        #initial-layout .avatar-img {
+            opacity: 1;
         }
         
         .avatar-img.loaded {
             opacity: 1;
         }
+
+        /* 点击邮箱：复制成功后的轻提示（桌面端无邮件客户端时至少可粘贴） */
+        #mail-toast {
+            position: fixed;
+            z-index: 10000;
+            left: 50%;
+            bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+            transform: translateX(-50%) translateY(120%);
+            max-width: min(22rem, calc(100vw - 2rem));
+            padding: 0.65rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            text-align: center;
+            color: #1d1d1f;
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.25s;
+        }
+
+        #mail-toast.mail-toast--visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+<body class="min-h-screen antialiased">
     <!-- 初始布局 - 头像、名字和身份 -->
     <div id="initial-layout" class="initial-layout">
         <div class="avatar rounded-full initial-avatar overflow-hidden mb-6 border-4 border-white">
@@ -372,9 +833,9 @@
         </div>
         
         <h1 class="initial-name font-display text-gray-800">
-            <span class="name-highlight">陈新钰</span>
+            <span class="name-highlight i18n-hero-name">陈新钰</span>
         </h1>
-        <p class="initial-title text-gray-600 tracking-wide">学生 & 网络工程师</p>
+        <p id="tagline-initial" class="initial-title text-[#86868b] tracking-wide font-medium">软件开发者</p>
     </div>
     
     <!-- 头像过渡元素 -->
@@ -387,10 +848,9 @@
     </div>
     
     <!-- 主内容区域 -->
-    <div id="main-content" class="container mx-auto px-4 py-12">
-        <!-- 头像部分 -->
-        <div class="flex flex-col items-center mb-12">
-            <div class="avatar rounded-full w-40 h-40 overflow-hidden mb-6 border-4 border-white">
+    <div id="main-content" class="page-shell layout-stack pt-8 pb-0 md:pt-12">
+        <header class="flex flex-col items-center text-center">
+            <div class="avatar rounded-full w-40 h-40 overflow-hidden mb-4 md:mb-5 ring-1 ring-black/[0.06] bg-[#fafafa]">
                 <img id="final-avatar" 
                      src="https://foruda.gitee.com/avatar/1748226361206753749/15870069_abcreatoris_1748226361.png" 
                      alt="陈新钰的头像" 
@@ -398,212 +858,516 @@
                      onerror="this.src='https://cdn-avatars.huggingface.co/v1/production/uploads/noauth/R1mAu5TR8RGL8Ig0d0bd4.jpeg'">
             </div>
             
-            <h1 class="text-4xl font-display text-gray-800 mb-2">
-                <span class="name-highlight">陈新钰</span>
+            <h1 class="hero-title font-display mb-2 md:mb-3">
+                <span class="name-highlight i18n-hero-name">陈新钰</span>
             </h1>
-            <p class="text-gray-600 mb-8 tracking-wide">学生 & 网络工程师</p>
-            
-            <!-- 格言部分 -->
-            <div id="quote-container" class="quote-container max-w-2xl text-center px-8 py-6 bg-white rounded-lg shadow-md mb-8 relative">
-                <p id="quote" class="text-xl font-quote text-gray-700 leading-relaxed"></p>
-                <p id="quote-author" class="text-right mt-2 text-gray-500 font-medium"></p>
+            <p id="tagline-main" class="max-w-[18rem] sm:max-w-md text-[1.0625rem] md:text-lg leading-relaxed text-[#6e6e73] font-normal tracking-[0.02em]">
+                软件开发者
+            </p>
+        </header>
+
+        <nav id="social-icons" class="-mt-1 md:-mt-2" aria-label="社交网络"></nav>
+
+        <section id="links-section" aria-label="链接与作品">
+            <div id="cards-container" class="content-links" role="navigation" aria-label="站内与常用链接"></div>
+        </section>
+
+        <section id="quote-section" aria-label="引言">
+            <div id="quote-container" class="quote-container cursor-pointer select-none" role="button" tabindex="0" aria-label="点击或按回车切换至下一条引言" title="点击切换下一条">
+                <p id="quote" class="font-quote"></p>
+                <p id="quote-author" class="quote-attribution"></p>
             </div>
-            
-            <!-- 社交图标 -->
-            <div id="social-icons"
-                 class="flex flex-wrap justify-center items-center w-full max-w-full
-                        gap-x-1 gap-y-1
-                        sm:gap-x-4 sm:gap-y-3
-                        md:gap-x-6 md:gap-y-4
-                        lg:gap-x-8 lg:gap-y-5
-                        xl:gap-x-10 xl:gap-y-6">
-            </div>
-        </div>
-        
-        <!-- 功能卡片 -->
-        <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 卡片将通过JS动态加载 -->
-        </div>
+        </section>
     </div>
 
     <script>
-        // 格言列表
-        const quotes = [
-            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-            { text: "取乎其上，得乎其中；取乎其中，得乎其下；取乎其下，则无所得矣。", author: "《孟子·告天下》" },
-            { text: "Shoot for the moon. Even if you miss, you'll land among the stars.", author: "Norman Vincent Peale" },
-            { text: "昨天是历史，明天是谜团，而今天是礼物。", author: "功夫熊猫" },
-            { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
-            { text: "志不求易者成，事不避难者进", author: "冯梦龙"},
-            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-            { text: "人生就像骑自行车，为了保持平衡，你必须保持前进。", author: "阿尔伯特·爱因斯坦" }
-        ];
-        
-        // 卡片数据 - 更新为技术博客、文档、简历和联系我
-        const cards = [
-            { 
-                title: "技术博客", 
-                description: "分享我的技术见解和学习心得", 
-                icon: "blog", 
-                buttonText: "阅读博客", 
-                gradientFrom: "purple-500", 
-                gradientTo: "indigo-300", 
-                buttonColor: "purple-500", 
-                buttonHover: "purple-500",
-                url: "https://blog.abcreatoris.com"
+        /** 境内 CN → 中文；境外 → 英文。失败时按浏览器语言回退。 */
+        let siteLocale = 'zh';
+
+        /** 格言列表（由 config.{zh|en}.json 的 quotes 填充） */
+        let quotesFromConfig = [];
+
+        /** 当前展示的格言在列表中的下标 */
+        let quoteDisplayIndex = 0;
+
+        /** 自动切换下一条格言的间隔（约 3 秒） */
+        const QUOTE_AUTO_ROTATE_MS = 3000;
+
+        /** 请求失败时的极简兜底（与 config.*.json 结构一致） */
+        const CONFIG_FALLBACK_ZH = {
+            ui: {
+                htmlLang: 'zh-CN',
+                pageTitle: '陈新钰的个人主页',
+                nameDisplay: '陈新钰',
+                tagline: '软件开发者',
+                avatarAlt: '陈新钰的头像',
+                socialNavAria: '社交网络',
+                linksSectionAria: '链接与作品',
+                contentLinksNavAria: '站内与常用链接',
+                quoteSectionAria: '引言',
+                quoteToggleAria: '点击或按回车切换至下一条引言',
+                quoteToggleTitle: '点击切换下一条'
             },
-            { 
-                title: "文档指南", 
-                description: "查看我整理的技术文档和指南", 
-                icon: "file-alt", 
-                buttonText: "查看文档", 
-                gradientFrom: "blue-400", 
-                gradientTo: "blue-200", 
-                buttonColor: "blue-600", 
-                buttonHover: "blue-700",
-                url: "#"
+            social: [
+                { href: 'https://github.com/ABCreatoris', label: 'GitHub', iconClass: 'fab fa-github', cssClass: 'github-icon' }
+            ],
+            contentLinks: [
+                { title: '技术博客', description: '', url: 'https://blog.abcreatoris.com' }
+            ],
+            quotes: [{ text: '求知若饥，虚心若愚。', author: 'Steve Jobs' }]
+        };
+
+        const CONFIG_FALLBACK_EN = {
+            ui: {
+                htmlLang: 'en',
+                pageTitle: 'Chen Xinyu — Personal page',
+                nameDisplay: 'Chen Xinyu',
+                tagline: 'Software developer',
+                avatarAlt: 'Portrait of Chen Xinyu',
+                socialNavAria: 'Social links',
+                linksSectionAria: 'Links & work',
+                contentLinksNavAria: 'Site and quick links',
+                quoteSectionAria: 'Quote',
+                quoteToggleAria: 'Click or press Enter for the next quote',
+                quoteToggleTitle: 'Next quote'
             },
-            { 
-                title: "心得小记", 
-                description: "偷看我的心得体会和进阶历程", 
-                icon: "code-branch", 
-                buttonText: "peek心得", 
-                gradientFrom: "green-400", 
-                gradientTo: "teal-200", 
-                buttonColor: "green-500", 
-                buttonHover: "green-600",
-                url: "#"
-            },
-            { 
-                title: "我的简历", 
-                description: "了解我的教育背景和工作经历", 
-                icon: "id-card", 
-                buttonText: "访问GitHub", 
-                gradientFrom: "orange-400", 
-                gradientTo: "yellow-200", 
-                buttonColor: "orange-600", 
-                buttonHover: "orange-700",
-                url: "https://github.com/chenxinyu"
-            },
-            { 
-                title: "个人软件", 
-                description: "下载尝试我编写的独立软件", 
-                icon: "laptop", 
-                buttonText: "前往查看", 
-                gradientFrom: "pink-500", 
-                gradientTo: "blue-200", 
-                buttonColor: "pink-500", 
-                buttonHover: "pink-600",
-                url: "https://linkedin.com/in/chenxinyu"
-            },
-            { 
-                title: "联系我", 
-                description: "发送合作或咨询请求", 
-                icon: "envelope", 
-                buttonText: "发送消息", 
-                gradientFrom: "red-400", 
-                gradientTo: "orange-300", 
-                buttonColor: "red-500", 
-                buttonHover: "red-600",
-                url: "mailto:chenxinyu@example.com"
+            social: [
+                { href: 'https://github.com/ABCreatoris', label: 'GitHub', iconClass: 'fab fa-github', cssClass: 'github-icon' }
+            ],
+            contentLinks: [
+                { title: 'Tech blog', description: '', url: 'https://blog.abcreatoris.com' }
+            ],
+            quotes: [{ text: 'Stay hungry. Stay foolish.', author: 'Steve Jobs' }]
+        };
+
+        /** 社交平台 SVG（小红书不在 Font Awesome brands 中时改用） */
+        const SOCIAL_SVG_XHS =
+            '<svg class="xhs-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="5.5" fill="currentColor"/><path fill="#ffffff" d="M7 7h10v2H7zm0 4h7v2H7zm0 4h10v2H7z"/></svg>';
+
+        let siteSocialLinks = [];
+        let siteContentLinks = [];
+
+        /**
+         * 与当前页面所在「目录」解析 config.zh.json / config.en.json 等。
+         * 避免 GitHub Pages 类地址为 …/repo（无尾斜杠）时相对路径落到站点根目录 404。
+         */
+        function resolveAssetUrl(filename) {
+            const baseEl = document.querySelector('base[href]');
+            if (baseEl && baseEl.href) {
+                return new URL(filename, baseEl.href).href;
             }
-        ];
-        
-        // 随机选择一条格言
-        function getRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            return quotes[randomIndex];
+            let path = window.location.pathname || '/';
+            if (!path.endsWith('/')) {
+                const last = path.split('/').pop() || '';
+                if (/\.[a-z0-9]+$/i.test(last)) {
+                    path = path.replace(/\/[^/]+$/, '/');
+                } else {
+                    path = path + '/';
+                }
+            }
+            return new URL(filename, window.location.origin + path).href;
         }
+
+        function localeFromNavigator() {
+            const nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+            return /^zh/i.test(nav) ? 'zh' : 'en';
+        }
+
+        async function resolveSiteLocale() {
+            const ctrl = new AbortController();
+            const tid = setTimeout(function () {
+                ctrl.abort();
+            }, 2800);
+            try {
+                const res = await fetch('https://get.geojs.io/v1/ip/country.json', {
+                    signal: ctrl.signal,
+                    cache: 'no-store'
+                });
+                if (!res.ok) throw new Error('geo http');
+                const geo = await res.json();
+                const code = String(geo.country || geo.country_code || '').toUpperCase();
+                if (code === 'CN') return 'zh';
+                return 'en';
+            } catch (e) {
+                return localeFromNavigator();
+            } finally {
+                clearTimeout(tid);
+            }
+        }
+
+        function isValidSiteConfig(data) {
+            if (!data || typeof data !== 'object') return false;
+            if (!data.ui || typeof data.ui !== 'object') return false;
+            if (!Array.isArray(data.social) || data.social.length === 0) return false;
+            if (!Array.isArray(data.contentLinks) || data.contentLinks.length === 0) return false;
+            if (!Array.isArray(data.quotes) || data.quotes.length === 0) return false;
+            return true;
+        }
+
+        function applyUiFromObject(t) {
+            document.documentElement.lang = t.htmlLang;
+            document.title = t.pageTitle;
+
+            document.querySelectorAll('.i18n-hero-name').forEach(function (el) {
+                el.textContent = t.nameDisplay;
+            });
+
+            const tagInitial = document.getElementById('tagline-initial');
+            const tagMain = document.getElementById('tagline-main');
+            if (tagInitial) tagInitial.textContent = t.tagline;
+            if (tagMain) tagMain.textContent = t.tagline;
+
+            ['profile-avatar', 'transition-avatar', 'final-avatar'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (el) el.setAttribute('alt', t.avatarAlt);
+            });
+
+            const socialNav = document.getElementById('social-icons');
+            if (socialNav) socialNav.setAttribute('aria-label', t.socialNavAria);
+
+            const linksSection = document.getElementById('links-section');
+            if (linksSection) linksSection.setAttribute('aria-label', t.linksSectionAria);
+
+            const cardsNav = document.getElementById('cards-container');
+            if (cardsNav) cardsNav.setAttribute('aria-label', t.contentLinksNavAria);
+
+            const quoteSection = document.getElementById('quote-section');
+            if (quoteSection) quoteSection.setAttribute('aria-label', t.quoteSectionAria);
+
+            const quoteContainer = document.getElementById('quote-container');
+            if (quoteContainer) {
+                quoteContainer.setAttribute('aria-label', t.quoteToggleAria);
+                quoteContainer.setAttribute('title', t.quoteToggleTitle);
+            }
+        }
+
+        function filterQuotesList(list) {
+            return (Array.isArray(list) ? list : []).filter(function (q) {
+                return q && typeof q.text === 'string' && typeof q.author === 'string';
+            });
+        }
+
+        function normalizeLinksFromConfig(data) {
+            const social = Array.isArray(data.social) ? data.social : [];
+            const contentLinks = Array.isArray(data.contentLinks) ? data.contentLinks : [];
+
+            const socialNorm = social.filter(function (s) {
+                if (!s || typeof s.label !== 'string' || !s.label.length) return false;
+                if (s.iconKind === 'xiaohongshu') {
+                    return typeof s.href === 'string' && s.href.length > 0;
+                }
+                if (s.iconKind === 'wechat') {
+                    return (
+                        typeof s.wechatId === 'string' &&
+                        s.wechatId.trim().length > 0 &&
+                        typeof s.iconClass === 'string' &&
+                        s.iconClass.length > 0 &&
+                        typeof s.href === 'string'
+                    );
+                }
+                if (s.iconKind === 'qq') {
+                    var uq = typeof s.qqUin === 'string' ? String(s.qqUin).replace(/\D/g, '') : '';
+                    return (
+                        uq.length >= 5 &&
+                        uq.length <= 14 &&
+                        typeof s.iconClass === 'string' &&
+                        s.iconClass.length > 0 &&
+                        typeof s.href === 'string'
+                    );
+                }
+                if (typeof s.href !== 'string') return false;
+                return typeof s.iconClass === 'string' && s.iconClass.length > 0;
+            });
+
+            const linksNorm = contentLinks.filter(function (c) {
+                return c && typeof c.url === 'string' && typeof c.title === 'string' && c.title.length > 0;
+            });
+
+            if (socialNorm.length === 0 || linksNorm.length === 0) {
+                throw new Error('links empty');
+            }
+
+            siteSocialLinks = socialNorm.map(function (s) {
+                var ik =
+                    s.iconKind === 'xiaohongshu'
+                        ? 'xiaohongshu'
+                        : s.iconKind === 'wechat'
+                          ? 'wechat'
+                          : s.iconKind === 'qq'
+                            ? 'qq'
+                            : '';
+                return {
+                    href: s.href,
+                    label: s.label,
+                    iconClass: typeof s.iconClass === 'string' ? s.iconClass : '',
+                    iconKind: ik,
+                    cssClass: typeof s.cssClass === 'string' ? s.cssClass : '',
+                    wechatId: typeof s.wechatId === 'string' ? s.wechatId.trim() : '',
+                    qqUin:
+                        typeof s.qqUin === 'string' ? String(s.qqUin).replace(/\D/g, '') : ''
+                };
+            });
+
+            siteContentLinks = linksNorm.map(function (c) {
+                return {
+                    title: c.title,
+                    description: typeof c.description === 'string' ? c.description : '',
+                    url: c.url
+                };
+            });
+        }
+
+        async function fetchSiteConfig(loc) {
+            try {
+                const res = await fetch(resolveAssetUrl('config.' + loc + '.json'), { cache: 'no-store' });
+                if (!res.ok) return null;
+                const data = await res.json();
+                return isValidSiteConfig(data) ? data : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function loadSiteConfig() {
+            let data = await fetchSiteConfig(siteLocale);
+            if (!data) {
+                const altLoc = siteLocale === 'zh' ? 'en' : 'zh';
+                data = await fetchSiteConfig(altLoc);
+                if (data) siteLocale = altLoc;
+            }
+            if (!data) {
+                data = siteLocale === 'en' ? CONFIG_FALLBACK_EN : CONFIG_FALLBACK_ZH;
+            }
+            try {
+                applyUiFromObject(data.ui);
+                normalizeLinksFromConfig(data);
+                quotesFromConfig = filterQuotesList(data.quotes);
+            } catch (e) {
+                const fb = siteLocale === 'en' ? CONFIG_FALLBACK_EN : CONFIG_FALLBACK_ZH;
+                applyUiFromObject(fb.ui);
+                normalizeLinksFromConfig(fb);
+                quotesFromConfig = filterQuotesList(fb.quotes);
+            }
+            if (quotesFromConfig.length === 0) {
+                quotesFromConfig = filterQuotesList(
+                    (siteLocale === 'en' ? CONFIG_FALLBACK_EN : CONFIG_FALLBACK_ZH).quotes
+                );
+            }
+        }
+
+        function getQuoteList() {
+            if (quotesFromConfig.length) return quotesFromConfig;
+            return filterQuotesList((siteLocale === 'en' ? CONFIG_FALLBACK_EN : CONFIG_FALLBACK_ZH).quotes);
+        }
+
         
         // 判断是否英文
         function isEnglish(text) {
             return /^[A-Za-z0-9\s.,'"!?;:()\-]+$/.test(text);
         }
-        
-        // 更新格言显示
-        function updateQuote() {
-            const quote = getRandomQuote();
-            const quoteElem = document.getElementById('quote');
-            quoteElem.textContent = `${quote.text}`;
-            if (isEnglish(quote.text)) {
-                quoteElem.setAttribute('lang', 'en');
+
+        function prefersReducedMotion() {
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        }
+
+        /** 含中日韩则按字拆分，否则按英文词（空白保留为不动画文本节点） */
+        function segmentQuoteGlyphs(text) {
+            const hasCjk = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/.test(text);
+            const segments = [];
+            if (hasCjk) {
+                for (const ch of text) {
+                    segments.push({ text: ch, animate: !/\s/.test(ch) });
+                }
             } else {
-                quoteElem.removeAttribute('lang');
+                text.split(/(\s+)/).forEach(function (part) {
+                    if (!part) return;
+                    if (/^\s+$/.test(part)) segments.push({ text: part, animate: false });
+                    else segments.push({ text: part, animate: true });
+                });
             }
-            document.getElementById('quote-author').textContent = `- ${quote.author}`;
+            return segments;
+        }
+
+        function fillQuoteGlyphs(quoteElem, text) {
+            quoteElem.textContent = '';
+            let idx = 0;
+            segmentQuoteGlyphs(text).forEach(function (seg) {
+                if (!seg.animate) {
+                    quoteElem.appendChild(document.createTextNode(seg.text));
+                    return;
+                }
+                const span = document.createElement('span');
+                span.className = 'quote-glyph';
+                span.textContent = seg.text;
+                span.style.setProperty('--qi', String(idx));
+                idx += 1;
+                quoteElem.appendChild(span);
+            });
+            return idx;
         }
         
-        // 渲染卡片
-        function renderCards() {
-            const container = document.getElementById('cards-container');
-            
-            cards.forEach((card, index) => {
-                const cardElement = document.createElement('div');
-                cardElement.className = 'card bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg';
-                
-                // 卡片顶部
-                const cardTop = document.createElement('div');
-                cardTop.className = `h-48 bg-gradient-to-r from-${card.gradientFrom} to-${card.gradientTo} flex items-center justify-center`;
-                
-                const cardIcon = document.createElement('i');
-                cardIcon.className = `fas fa-${card.icon} text-white text-6xl card-icon`;
-                
-                cardTop.appendChild(cardIcon);
-                
-                // 卡片内容
-                const cardContent = document.createElement('div');
-                cardContent.className = 'p-6';
-                
-                const cardTitle = document.createElement('h3');
-                cardTitle.className = 'text-xl font-card-title text-gray-800 mb-2';
-                cardTitle.textContent = card.title;
-                
-                const cardDesc = document.createElement('p');
-                cardDesc.className = 'text-gray-600 mb-4 font-card-content';
-                cardDesc.textContent = card.description;
-                
-                const cardButton = document.createElement('a');
-                cardButton.href = card.url;
-                cardButton.className = `inline-block px-4 py-2 bg-${card.buttonColor} text-white rounded-md hover:bg-${card.buttonHover} transition font-medium`;
-                cardButton.textContent = card.buttonText;
-                
-                cardContent.appendChild(cardTitle);
-                cardContent.appendChild(cardDesc);
-                cardContent.appendChild(cardButton);
-                
-                // 组装卡片
-                cardElement.appendChild(cardTop);
-                cardElement.appendChild(cardContent);
-                
-                container.appendChild(cardElement);
-                
-                // 延迟显示卡片动画
-                setTimeout(() => {
-                    cardElement.classList.add('show');
-                }, 800 + index * 200);
+        /**
+         * 更新格言显示（逐词/逐字动画 + 署名错峰）。
+         * @param {boolean} advanceNext 为 true 时先切到下一条（顺序循环），再渲染；首次展示请传 false。
+         */
+        function updateQuote(advanceNext) {
+            const list = getQuoteList();
+            if (list.length === 0) return;
+
+            if (advanceNext === true) {
+                quoteDisplayIndex = (quoteDisplayIndex + 1) % list.length;
+            }
+
+            const quote = list[quoteDisplayIndex];
+
+            const container = document.getElementById('quote-container');
+            const quoteElem = document.getElementById('quote');
+            const authorEl = document.getElementById('quote-author');
+
+            if (prefersReducedMotion()) {
+                container.classList.remove('quote-play');
+                quoteElem.textContent = quote.text;
+                if (isEnglish(quote.text)) quoteElem.setAttribute('lang', 'en');
+                else quoteElem.removeAttribute('lang');
+                authorEl.textContent = '\u2014 ' + quote.author;
+                authorEl.classList.toggle('quote-attribution-cn', /[\u4e00-\u9fff]/.test(quote.author));
+                return;
+            }
+
+            container.classList.remove('quote-play');
+            void container.offsetWidth;
+
+            if (isEnglish(quote.text)) quoteElem.setAttribute('lang', 'en');
+            else quoteElem.removeAttribute('lang');
+
+            const glyphCount = fillQuoteGlyphs(quoteElem, quote.text);
+            authorEl.textContent = '\u2014 ' + quote.author;
+            authorEl.classList.toggle('quote-attribution-cn', /[\u4e00-\u9fff]/.test(quote.author));
+
+            let authorDelaySec = 0.22 + glyphCount * 0.036;
+            container.style.setProperty('--quote-author-delay', authorDelaySec + 's');
+
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    container.classList.add('quote-play');
+                });
             });
         }
         
-        // 检查头像是否有效
-        function checkAvatar() {
-            const avatarImg = document.getElementById('profile-avatar');
-            const finalAvatarImg = document.getElementById('final-avatar');
-            const transitionAvatar = document.getElementById('transition-avatar');
-            
-            fetch(avatarImg.src)
-                .then(response => {
-                    if (!response.ok) {
-                        avatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
-                        finalAvatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
-                        transitionAvatar.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
-                    }
-                })
-                .catch(() => {
-                    avatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
-                    finalAvatarImg.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
-                    transitionAvatar.src = 'https://huggingface.co/front/assets/huggingface_logo-noborder.svg';
-                });
+        function showMailToast(message) {
+            var el = document.getElementById('mail-toast');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'mail-toast';
+                el.setAttribute('role', 'status');
+                el.setAttribute('aria-live', 'polite');
+                document.body.appendChild(el);
+            }
+            el.textContent = message;
+            el.classList.add('mail-toast--visible');
+            clearTimeout(showMailToast._hideTimer);
+            showMailToast._hideTimer = setTimeout(function () {
+                el.classList.remove('mail-toast--visible');
+            }, 3200);
         }
+
+        function copyTextToClipboard(text) {
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                return navigator.clipboard.writeText(text);
+            }
+            return new Promise(function (resolve, reject) {
+                try {
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    ta.setSelectionRange(0, text.length);
+                    var ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    ok ? resolve() : reject(new Error('execCommand'));
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
+        /** 先复制地址再打开 mailto：桌面端无客户端时仍可粘贴到网页邮箱 */
+        function bindMailtoClick(anchor, mailtoHref) {
+            if (!anchor || typeof mailtoHref !== 'string' || !/^mailto:/i.test(mailtoHref)) return;
+            var addr = mailtoHref.replace(/^mailto:/i, '').split('?')[0];
+            var msg =
+                siteLocale === 'zh'
+                    ? '复制邮件地址成功。'
+                    : 'Email address copied.';
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                copyTextToClipboard(addr)
+                    .then(function () {
+                        showMailToast(msg);
+                    })
+                    .catch(function () {
+                        showMailToast(siteLocale === 'zh' ? '请手动复制邮箱：' + addr : 'Copy manually: ' + addr);
+                    })
+                    .then(function () {
+                        /* 稍晚再打开 mailto，让底部提示先出现、可读 */
+                        window.setTimeout(function () {
+                            window.location.href = mailtoHref;
+                        }, 520);
+                    });
+            });
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cards-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            siteContentLinks.forEach(function (item, index) {
+                if (index > 0) {
+                    const sep = document.createElement('span');
+                    sep.className = 'content-links__sep';
+                    sep.setAttribute('aria-hidden', 'true');
+                    sep.textContent = '\u00b7';
+                    container.appendChild(sep);
+                }
+
+                const a = document.createElement('a');
+                a.href = item.url;
+                a.className = 'card content-links__a';
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'content-links__title';
+                titleSpan.textContent = item.title;
+                a.appendChild(titleSpan);
+                if (typeof item.description === 'string' && item.description.length > 0) {
+                    a.setAttribute('aria-label', item.title + '：' + item.description);
+                    a.title = item.description;
+                    const descSpan = document.createElement('span');
+                    descSpan.className = 'content-links__desc';
+                    descSpan.textContent = item.description;
+                    descSpan.setAttribute('aria-hidden', 'true');
+                    a.appendChild(descSpan);
+                }
+                if (/^mailto:/i.test(item.url)) {
+                    var mailAddr = item.url.replace(/^mailto:/i, '').split('?')[0];
+                    a.title = a.title ? mailAddr + ' — ' + a.title : mailAddr;
+                    bindMailtoClick(a, item.url);
+                }
+                if (/^https?:\/\//i.test(item.url)) {
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                }
+
+                container.appendChild(a);
+
+                setTimeout(function () {
+                    a.classList.add('show');
+                }, 800 + index * 70);
+            });
+        }
+        
         
         // 动画序列
         function startAnimationSequence() {
@@ -644,22 +1408,26 @@
                         setTimeout(() => {
                             avatarTransition.classList.add('hidden');
                             
-                            // 5. 显示格言
+                            // 5. 先显示社交图标
                             setTimeout(() => {
-                                updateQuote();
-                                document.getElementById('quote-container').classList.add('show');
-                                
-                                // 6. 逐个显示社交图标
                                 const socialIcons = document.querySelectorAll('.social-icon');
                                 socialIcons.forEach((icon, index) => {
                                     setTimeout(() => {
                                         icon.classList.add('show');
                                     }, index * 200);
                                 });
-                                
-                                // 7. 显示卡片
-                                renderCards();
-                                
+
+                                // 6. 正文文字链接 → 引言
+                                const cardsReveal = Math.max(420, socialIcons.length * 200 + 200);
+                                setTimeout(function () {
+                                    renderCards();
+                                }, cardsReveal);
+
+                                const quoteDelay = Math.max(620, socialIcons.length * 200 + 520);
+                                setTimeout(() => {
+                                    updateQuote(false);
+                                    document.getElementById('quote-container').classList.add('show');
+                                }, quoteDelay);
                             }, 500);
                         }, 800);
                     }, 800);
@@ -667,96 +1435,134 @@
             }, 1500);
         }
         
-        // 页面加载时初始化所有内容
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAvatar();
-            startAnimationSequence();
-            
-            // 点击格言区域可以更换格言
-            document.getElementById('quote-container').addEventListener('click', updateQuote);
-            
-            // 每30秒自动更换格言
-            setInterval(updateQuote, 30000);
-        });
+        document.addEventListener('DOMContentLoaded', async function () {
+            siteLocale = await resolveSiteLocale();
+            await loadSiteConfig();
+            quoteDisplayIndex = 0;
+            renderSocialIcons();
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var avatars = document.querySelectorAll('.avatar-img');
-            avatars.forEach(function(avatar) {
-                if (avatar.complete) {
+            document.querySelectorAll('.avatar-img').forEach(function (avatar) {
+                function reveal() {
                     avatar.classList.add('loaded');
-                } else {
-                    avatar.addEventListener('load', function() {
-                        avatar.classList.add('loaded');
-                    });
+                }
+
+                if (avatar.closest('#initial-layout')) {
+                    reveal();
+                    return;
+                }
+
+                if (avatar.complete && avatar.naturalWidth > 0) {
+                    reveal();
+                    return;
+                }
+
+                avatar.addEventListener('load', reveal, { once: true });
+                avatar.addEventListener('error', reveal, { once: true });
+            });
+
+            startAnimationSequence();
+
+            const quoteContainer = document.getElementById('quote-container');
+            quoteContainer.addEventListener('click', function () {
+                updateQuote(true);
+            });
+            quoteContainer.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    updateQuote(true);
                 }
             });
+            setInterval(function () {
+                updateQuote(true);
+            }, QUOTE_AUTO_ROTATE_MS);
         });
 
-        const socialLinks = [
-            {
-                href: "https://github.com/chenxinyu",
-                icon: "fab fa-github",
-                class: "github-icon",
-                label: "GitHub"
-            },
-            {
-                href: "https://linkedin.com/in/chenxinyu",
-                icon: "fab fa-linkedin",
-                class: "linkedin-icon",
-                label: "LinkedIn"
-            },
-            {
-                href: "#",
-                icon: "fab fa-weixin",
-                class: "wechat-icon",
-                label: "WeChat"
-            },
-            {
-                href: "#",
-                icon: "fab fa-qq",
-                class: "qq-icon",
-                label: "QQ"
-            },
-            {
-                href: "https://weibo.com/u/chenxinyu",
-                icon: "fab fa-weibo",
-                class: "weibo-icon",
-                label: "Weibo"
-            },
-            {
-                href: "https://www.bilibili.com",
-                icon: "fab fa-bilibili",
-                class: "bilibili-icon",
-                label: "Bilibili"
-            },
-            {
-                href: "mailto:chenxinyu@example.com",
-                icon: "fas fa-envelope",
-                class: "email-icon",
-                label: "Email"
+        /** 触控 / 窄屏：社交里的微信、QQ用自定义协议唤起 App */
+        function shouldUseMobileContactScheme() {
+            if (window.matchMedia('(pointer: coarse)').matches) return true;
+            if (
+                window.matchMedia('(max-width: 767.98px)').matches &&
+                ((navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || 'ontouchstart' in window)
+            ) {
+                return true;
             }
-        ];
+            return false;
+        }
 
         function renderSocialIcons() {
             const container = document.getElementById('social-icons');
             container.innerHTML = '';
-            socialLinks.forEach(link => {
+            siteSocialLinks.forEach(function (link) {
                 const a = document.createElement('a');
-                a.href = link.href;
-                a.target = "_blank";
-                a.rel = "noopener noreferrer";
-                a.className = `social-icon ${link.class} text-3xl sm:text-4xl`;
+                const cssExtra = link.cssClass ? link.cssClass : '';
+                a.className = 'social-icon' + (cssExtra ? ' ' + cssExtra : '');
                 a.setAttribute('aria-label', link.label);
-                const i = document.createElement('i');
-                i.className = link.icon;
-                a.appendChild(i);
+
+                var useMobileScheme = shouldUseMobileContactScheme();
+
+                if (link.iconKind === 'wechat' && link.wechatId) {
+                    if (useMobileScheme) {
+                        a.href = 'weixin://dl/business/?t=' + encodeURIComponent(link.wechatId);
+                        a.title =
+                            siteLocale === 'zh'
+                                ? '在微信中打开添加：' + link.wechatId
+                                : 'Open in WeChat to add: ' + link.wechatId;
+                    } else {
+                        a.href = '#';
+                        a.title =
+                            siteLocale === 'zh' ? '微信号：' + link.wechatId : 'WeChat ID: ' + link.wechatId;
+                        a.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            copyTextToClipboard(link.wechatId)
+                                .then(function () {
+                                    showMailToast(siteLocale === 'zh' ? '微信号已复制。' : 'WeChat ID copied.');
+                                })
+                                .catch(function () {
+                                    showMailToast(
+                                        siteLocale === 'zh'
+                                            ? '请手动复制微信号：' + link.wechatId
+                                            : 'Copy manually: ' + link.wechatId
+                                    );
+                                });
+                        });
+                    }
+                } else if (link.iconKind === 'qq' && link.qqUin) {
+                    var uin = link.qqUin;
+                    if (useMobileScheme) {
+                        a.href =
+                            'mqqwpa://im/chat?chat_type=wpa&uin=' +
+                            uin +
+                            '&version=1&src_type=web&web_src=abcreatoris.com';
+                        a.title = 'QQ ' + uin;
+                    } else {
+                        a.href = 'https://wpa.qq.com/msgrd?v=3&uin=' + uin + '&site=qq&menu=yes';
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                        a.title = 'QQ ' + uin;
+                    }
+                } else {
+                    a.href = link.href;
+                    if (/^https?:\/\//i.test(link.href)) {
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                    }
+                    if (/^mailto:/i.test(link.href)) {
+                        a.title = link.href.replace(/^mailto:/i, '').split('?')[0];
+                        bindMailtoClick(a, link.href);
+                    }
+                }
+
+                if (link.iconKind === 'xiaohongshu') {
+                    a.innerHTML = SOCIAL_SVG_XHS;
+                } else {
+                    const i = document.createElement('i');
+                    i.className = link.iconClass;
+                    i.setAttribute('aria-hidden', 'true');
+                    a.appendChild(i);
+                }
                 container.appendChild(a);
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            renderSocialIcons();
-        });
     </script>
 </body>
 </html>

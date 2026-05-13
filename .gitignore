@@ -1,0 +1,3 @@
+# Agent skills (local only, not pushed)
+.agents/
+skills-lock.json

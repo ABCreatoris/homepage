@@ -1,0 +1,122 @@
+{
+  "ui": {
+    "htmlLang": "en",
+    "pageTitle": "Chen Xinyu — Personal page",
+    "nameDisplay": "Chen Xinyu",
+    "tagline": "Software developer",
+    "avatarAlt": "Portrait of Chen Xinyu",
+    "socialNavAria": "Social links",
+    "linksSectionAria": "Links & work",
+    "contentLinksNavAria": "Site and quick links",
+    "quoteSectionAria": "Quote",
+    "quoteToggleAria": "Click or press Enter for the next quote",
+    "quoteToggleTitle": "Next quote"
+  },
+  "social": [
+    {
+      "href": "https://github.com/ABCreatoris",
+      "label": "GitHub",
+      "iconClass": "fab fa-github",
+      "cssClass": "github-icon"
+    },
+    {
+      "href": "https://www.linkedin.com/in/abcreatoris",
+      "label": "LinkedIn",
+      "iconClass": "fab fa-linkedin",
+      "cssClass": "linkedin-icon"
+    },
+    {
+      "href": "#",
+      "label": "WeChat",
+      "iconClass": "fab fa-weixin",
+      "cssClass": "wechat-icon",
+      "iconKind": "wechat",
+      "wechatId": "abcreatoris"
+    },
+    {
+      "href": "#",
+      "label": "QQ",
+      "iconClass": "fab fa-qq",
+      "cssClass": "qq-icon",
+      "iconKind": "qq",
+      "qqUin": "2740686056"
+    },
+    {
+      "href": "https://weibo.com/abcreatoris",
+      "label": "Weibo",
+      "iconClass": "fab fa-weibo",
+      "cssClass": "weibo-icon"
+    },
+    {
+      "href": "https://www.xiaohongshu.com/user/profile/6400943d000000002a009115",
+      "label": "Xiaohongshu",
+      "iconKind": "xiaohongshu",
+      "cssClass": "xiaohongshu-icon"
+    },
+    {
+      "href": "https://space.bilibili.com/3546772678904651",
+      "label": "Bilibili",
+      "iconClass": "fab fa-bilibili",
+      "cssClass": "bilibili-icon"
+    },
+    {
+      "href": "mailto:chenxinyu@abcreatoris.com",
+      "label": "Email",
+      "iconClass": "fas fa-envelope",
+      "cssClass": "email-icon"
+    }
+  ],
+  "contentLinks": [
+    {
+      "title": "Tech blog",
+      "description": "Notes on engineering and learning",
+      "url": "https://blog.abcreatoris.com"
+    },
+    {
+      "title": "Docs & guides",
+      "description": "Curated docs and note index",
+      "url": "#"
+    },
+    {
+      "title": "Short notes",
+      "description": "Essays and quick reminders",
+      "url": "#"
+    },
+    {
+      "title": "Personal software",
+      "description": "Small tools and downloads",
+      "url": "https://www.linkedin.com/in/abcreatoris"
+    },
+    {
+      "title": "Contact",
+      "description": "Collaboration or inquiries by email",
+      "url": "mailto:chenxinyu@abcreatoris.com"
+    }
+  ],
+  "quotes": [
+    {
+      "text": "The only way to do great work is to love what you do.",
+      "author": "Steve Jobs"
+    },
+    {
+      "text": "Shoot for the moon. Even if you miss, you'll land among the stars.",
+      "author": "Norman Vincent Peale"
+    },
+    {
+      "text": "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+      "author": "Winston Churchill"
+    },
+    {
+      "text": "Stay hungry. Stay foolish.",
+      "author": "Steve Jobs"
+    },
+    {
+      "text": "The journey of a thousand miles begins with a single step.",
+      "author": "Lao Tzu"
+    },
+    {
+      "text": "Yesterday is history, tomorrow is a mystery, but today is a gift.",
+      "author": "Kung Fu Panda"
+    }
+  ]
+}
