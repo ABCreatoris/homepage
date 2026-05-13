@@ -893,6 +893,17 @@
         /** 自动切换下一条格言的间隔（约 3 秒） */
         const QUOTE_AUTO_ROTATE_MS = 3000;
 
+        /** 自动轮播计时器；手动点击后会 clear 再 schedule，重新从完整间隔计起 */
+        let quoteAutoRotateTimerId = null;
+
+        function scheduleQuoteAutoRotate() {
+            clearTimeout(quoteAutoRotateTimerId);
+            quoteAutoRotateTimerId = setTimeout(function () {
+                updateQuote(true);
+                scheduleQuoteAutoRotate();
+            }, QUOTE_AUTO_ROTATE_MS);
+        }
+
         /** 请求失败时的极简兜底（与 config.*.json 结构一致） */
         const CONFIG_FALLBACK_ZH = {
             ui: {
@@ -1465,16 +1476,16 @@
             const quoteContainer = document.getElementById('quote-container');
             quoteContainer.addEventListener('click', function () {
                 updateQuote(true);
+                scheduleQuoteAutoRotate();
             });
             quoteContainer.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     updateQuote(true);
+                    scheduleQuoteAutoRotate();
                 }
             });
-            setInterval(function () {
-                updateQuote(true);
-            }, QUOTE_AUTO_ROTATE_MS);
+            scheduleQuoteAutoRotate();
         });
 
         /** 触控 / 窄屏：社交里的微信、QQ用自定义协议唤起 App */
