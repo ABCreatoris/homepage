@@ -63,7 +63,7 @@
     "weekendBadge": {
       "enabled": true,
       "icon": "home",
-      "hoverHint": "在家度假中"
+      "hoverHints": ["在家度假ing", "光合作用", "自由生长"]
     },
     "holidays": [
       {
