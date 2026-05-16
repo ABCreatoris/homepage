@@ -10,7 +10,83 @@
     "contentLinksNavAria": "Site and quick links",
     "quoteSectionAria": "Quote",
     "quoteToggleAria": "Click or press Enter for the next quote",
-    "quoteToggleTitle": "Next quote"
+    "quoteToggleTitle": "Next quote",
+    "headerAvatarAria": "Profile photo — after the intro, click to cycle a greeting on each side",
+    "mailCopySuccess": "Email address copied.",
+    "mailCopyManual": "Copy manually: {value}",
+    "wechatCopySuccess": "WeChat ID copied.",
+    "wechatCopyManual": "Copy manually: {value}",
+    "wechatTitleDesktop": "WeChat ID: {value}",
+    "wechatTitleMobile": "Open in WeChat to add: {value}",
+    "qqTitle": "QQ {value}",
+    "likeAriaLabel": "Like",
+    "likeAriaLabelActive": "Liked",
+    "likeHoverHint": "{count} visitors liked",
+    "likeHoverHintEmpty": "Be the first to like"
+  },
+  "analytics": {
+    "likes": {
+      "enabled": true,
+      "provider": "local",
+      "localTotalKey": "homepage-like-total-v1",
+      "abacusNamespace": "abcreatoris.com",
+      "totalLikesKey": "total-likes"
+    }
+  },
+  "avatarMedia": {
+    "fullUrl": "https://foruda.gitee.com/avatar/1778850428833983960/15870069_abcreatoris_1778850428.png",
+    "thumbSize": 32,
+    "thumbUrl": "https://foruda.gitee.com/avatar/1778850428833983960/15870069_abcreatoris_1778850428.png!avatar32",
+    "fallbackUrl": "https://cdn-avatars.huggingface.co/v1/production/uploads/6831e4589d44e9f51992e896/SeJ5WRIlzmRZGuOpRtu68.png"
+  },
+  "avatarTap": {
+    "bubbles": [
+      "Hi~, I'm CXY",
+      "Call me ABCreatoris",
+      "Welcome",
+      "Software developer",
+      "Into investing & photography",
+      "Work & contacts below",
+      "Quotes & mottos too",
+      "Nice to meet you",
+      "Enjoy my work"
+    ]
+  },
+  "presence": {
+    "employmentType": "employee",
+    "companyLegalName": "Baidu Online Network Technology (Beijing) Co., Ltd.",
+    "companyMatchSubstring": "Baidu",
+    "workBadge": {
+      "icon": "briefcase",
+      "hoverHints": ["Employed at Baidu", "Love building with tech", "Coffee sometime?"]
+    },
+    "weekendBadge": {
+      "enabled": true,
+      "icon": "home",
+      "hoverHint": "Relaxing at home"
+    },
+    "holidays": [
+      {
+        "id": "new-year",
+        "title": "New Year",
+        "hoverHint": "Happy New Year",
+        "icon": "🎊",
+        "startMonth": 1,
+        "startDay": 1,
+        "endMonth": 1,
+        "endDay": 3
+      },
+      {
+        "id": "qingming",
+        "title": "Qingming",
+        "hoverHint": "Qingming holiday",
+        "icon": "🫔",
+        "startMonth": 4,
+        "startDay": 4,
+        "endMonth": 4,
+        "endDay": 6
+      }
+    ]
   },
   "social": [
     {
@@ -93,30 +169,39 @@
       "url": "mailto:chenxinyu@abcreatoris.com"
     }
   ],
-  "quotes": [
-    {
-      "text": "The only way to do great work is to love what you do.",
-      "author": "Steve Jobs"
-    },
-    {
-      "text": "Shoot for the moon. Even if you miss, you'll land among the stars.",
-      "author": "Norman Vincent Peale"
-    },
-    {
-      "text": "Success is not final, failure is not fatal: It is the courage to continue that counts.",
-      "author": "Winston Churchill"
-    },
-    {
-      "text": "Stay hungry. Stay foolish.",
-      "author": "Steve Jobs"
-    },
-    {
-      "text": "The journey of a thousand miles begins with a single step.",
-      "author": "Lao Tzu"
-    },
-    {
-      "text": "Yesterday is history, tomorrow is a mystery, but today is a gift.",
-      "author": "Kung Fu Panda"
-    }
-  ]
+  "quotes": {
+    "mottosTitle": "My mottos",
+    "mottos": [
+      { "text": "Cling to the past and you forfeit the present and future." },
+      { "text": "Honor your choices—an unexamined today shapes tomorrow." },
+      { "text": "Solving problems takes wit and adaptability." },
+      { "text": "Emotion and attitude often run deeper than reason—and matter more." }
+    ],
+    "famous": [
+      {
+        "text": "The only way to do great work is to love what you do.",
+        "author": "Steve Jobs"
+      },
+      {
+        "text": "Shoot for the moon. Even if you miss, you'll land among the stars.",
+        "author": "Norman Vincent Peale"
+      },
+      {
+        "text": "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+        "author": "Winston Churchill"
+      },
+      {
+        "text": "Stay hungry. Stay foolish.",
+        "author": "Steve Jobs"
+      },
+      {
+        "text": "The journey of a thousand miles begins with a single step.",
+        "author": "Lao Tzu"
+      },
+      {
+        "text": "Yesterday is history, tomorrow is a mystery, but today is a gift.",
+        "author": "Kung Fu Panda"
+      }
+    ]
+  }
 }

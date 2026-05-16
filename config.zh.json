@@ -10,7 +10,83 @@
     "contentLinksNavAria": "站内与常用链接",
     "quoteSectionAria": "引言",
     "quoteToggleAria": "点击或按回车切换至下一条引言",
-    "quoteToggleTitle": "点击切换下一条"
+    "quoteToggleTitle": "点击切换下一条",
+    "headerAvatarAria": "头像，开场动画结束后点击切换左右侧问候语",
+    "mailCopySuccess": "复制邮件地址成功。",
+    "mailCopyManual": "请手动复制邮箱：{value}",
+    "wechatCopySuccess": "微信号已复制。",
+    "wechatCopyManual": "请手动复制微信号：{value}",
+    "wechatTitleDesktop": "微信号：{value}",
+    "wechatTitleMobile": "在微信中打开添加：{value}",
+    "qqTitle": "QQ {value}",
+    "likeAriaLabel": "点赞",
+    "likeAriaLabelActive": "已点赞",
+    "likeHoverHint": "已有{count}位访客点赞",
+    "likeHoverHintEmpty": "期待你的点赞"
+  },
+  "analytics": {
+    "likes": {
+      "enabled": true,
+      "provider": "local",
+      "localTotalKey": "homepage-like-total-v1",
+      "abacusNamespace": "abcreatoris.com",
+      "totalLikesKey": "total-likes"
+    }
+  },
+  "avatarMedia": {
+    "fullUrl": "https://foruda.gitee.com/avatar/1778850428833983960/15870069_abcreatoris_1778850428.png",
+    "thumbSize": 32,
+    "thumbUrl": "https://foruda.gitee.com/avatar/1778850428833983960/15870069_abcreatoris_1778850428.png!avatar32",
+    "fallbackUrl": "https://cdn-avatars.huggingface.co/v1/production/uploads/6831e4589d44e9f51992e896/SeJ5WRIlzmRZGuOpRtu68.png"
+  },
+  "avatarTap": {
+    "bubbles": [
+      "Hi~，我叫CXY",
+      "网名为ABCreatoris",
+      "欢迎来到我的主页",
+      "我是一名软件开发者",
+      "爱好是投资和摄影",
+      "以下是我的作品和联系方式",
+      "也有名人格言和我的座右铭",
+      "朋友，很高兴认识你",
+      "希望你喜欢我的创作"
+    ]
+  },
+  "presence": {
+    "employmentType": "employee",
+    "companyLegalName": "百度在线网络技术（北京）有限公司",
+    "companyMatchSubstring": "百度在线",
+    "workBadge": {
+      "icon": "briefcase",
+      "hoverHints": ["就职于百度", "热爱技术", "一起喝咖啡"]
+    },
+    "weekendBadge": {
+      "enabled": true,
+      "icon": "home",
+      "hoverHint": "在家度假中"
+    },
+    "holidays": [
+      {
+        "id": "new-year",
+        "title": "元旦",
+        "hoverHint": "元旦快乐",
+        "icon": "🎊",
+        "startMonth": 1,
+        "startDay": 1,
+        "endMonth": 1,
+        "endDay": 3
+      },
+      {
+        "id": "qingming",
+        "title": "清明",
+        "hoverHint": "清明假期",
+        "icon": "🫔",
+        "startMonth": 4,
+        "startDay": 4,
+        "endMonth": 4,
+        "endDay": 6
+      }
+    ]
   },
   "social": [
     {
@@ -93,30 +169,39 @@
       "url": "mailto:chenxinyu@abcreatoris.com"
     }
   ],
-  "quotes": [
-    {
-      "text": "取乎其上，得乎其中；取乎其中，得乎其下；取乎其下，则无所得矣。",
-      "author": "《孟子·告天下》"
-    },
-    {
-      "text": "昨天是历史，明天是谜团，而今天是礼物。",
-      "author": "功夫熊猫"
-    },
-    {
-      "text": "志不求易者成，事不避难者进。",
-      "author": "冯梦龙"
-    },
-    {
-      "text": "人生就像骑自行车，为了保持平衡，你必须保持前进。",
-      "author": "阿尔伯特·爱因斯坦"
-    },
-    {
-      "text": "Keep it Simple, Keep it Stupid。",
-      "author": "Steve Jobs"
-    },
-    {
-      "text": "成功并非终点，失败也并非末日，真正可贵的是继续前进的勇气。",
-      "author": "温斯顿·丘吉尔"
-    }
-  ]
+  "quotes": {
+    "mottosTitle": "我的座右铭",
+    "mottos": [
+      { "text": "记不得和放不下过去的人没有现在及未来" },
+      { "text": "认真对待自己的选择，未经思考的现在塑就未来" },
+      { "text": "解决问题的能力在于智力和应变力" },
+      { "text": "情绪和态度时常比理性更底层、更有价值" }
+    ],
+    "famous": [
+      {
+        "text": "取乎其上，得乎其中；取乎其中，得乎其下；取乎其下，则无所得矣。",
+        "author": "《孟子·告天下》"
+      },
+      {
+        "text": "昨天是历史，明天是谜团，而今天是礼物。",
+        "author": "功夫熊猫"
+      },
+      {
+        "text": "志不求易者成，事不避难者进。",
+        "author": "冯梦龙"
+      },
+      {
+        "text": "人生就像骑自行车，为了保持平衡，你必须保持前进。",
+        "author": "阿尔伯特·爱因斯坦"
+      },
+      {
+        "text": "Keep it Simple, Keep it Stupid。",
+        "author": "Steve Jobs"
+      },
+      {
+        "text": "成功并非终点，失败也并非末日，真正可贵的是继续前进的勇气。",
+        "author": "温斯顿·丘吉尔"
+      }
+    ]
+  }
 }

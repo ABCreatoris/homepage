@@ -1,3 +1,41 @@
-# Agent skills (local only, not pushed)
+# =============================================================================
+# homepage .gitignore
+# 下列文件/目录不应提交到 Git（本地生成、依赖、密钥或仅本机配置）
+# =============================================================================
+
+# --- 依赖（npm install 可恢复）---
+node_modules/
+
+# --- 环境与密钥（切勿上传）---
+.env
+.env.*
+!.env.example
+
+# --- 操作系统 ---
+.DS_Store
+Thumbs.db
+
+# --- 编辑器 / IDE（个人配置，非项目源码）---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.cursor/
+
+# --- Agent / 本地技能（仅本机 Cursor/Agent 用）---
 .agents/
 skills-lock.json
+
+# --- 日志与缓存 ---
+*.log
+npm-debug.log*
+.cache/
+.parcel-cache/
+
+# --- 可选：Tailwind 构建产物 ---
+# 若部署流程里会执行 `npm run build:css`，可取消注释，不提交编译后的 CSS：
+# tailwind.css
+
+# --- 可选：Vercel / 其他部署平台本地目录 ---
+.vercel/
