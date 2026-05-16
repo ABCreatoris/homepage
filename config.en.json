@@ -63,7 +63,7 @@
     "weekendBadge": {
       "enabled": true,
       "icon": "home",
-      "hoverHints": ["Home vacation mode", "Photosynthesis", "Growing freely"]
+      "hoverHints": ["Relaxing at home", "Photosynthesis mode", "Growing freely"]
     },
     "holidays": [
       {
