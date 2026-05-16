@@ -1306,9 +1306,9 @@
         }
 
         html[lang^='en'] .avatar-presence-badge__hint,
-        html[lang^='en'] .hero-like-hint {
+        html[lang^='en'] .hero-like-count {
             font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: 0.01em;
         }
         
@@ -1576,81 +1576,20 @@
             flex-shrink: 0;
         }
 
-        /* 桌面：提示在拇指右侧，不压住姓名 */
-        .hero-like-hint {
-            position: absolute;
-            left: calc(100% + 0.42rem);
-            top: 50%;
-            bottom: auto;
-            transform: translateY(-50%);
-            padding: 0.4rem 0.62rem;
-            font-size: 0.6875rem;
-            font-weight: 500;
-            line-height: 1.35;
-            letter-spacing: 0.02em;
-            white-space: nowrap;
-            color: #1d1d1f;
-            background: rgba(255, 255, 255, 0.98);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
-            z-index: 20;
-        }
-
-        .hero-like-hint::after {
-            content: '';
-            position: absolute;
-            right: 100%;
-            top: 50%;
-            left: auto;
-            transform: translateY(-50%);
-            border: 5px solid transparent;
-            border-right-color: rgba(255, 255, 255, 0.98);
-            filter: drop-shadow(-1px 0 0 rgba(0, 0, 0, 0.05));
-        }
-
-        .hero-like-btn:hover .hero-like-hint,
-        .hero-like-btn:focus-visible .hero-like-hint,
-        .hero-like-btn.is-hint-on .hero-like-hint {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(-50%) translateX(2px);
-            transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s;
-        }
-
-        @media (max-width: 767px) {
-            .hero-like-hint {
-                left: 50%;
-                top: calc(100% + 0.38rem);
-                transform: translateX(-50%);
-                max-width: min(18rem, 88vw);
-                text-align: center;
-            }
-
-            .hero-like-hint::after {
-                right: auto;
-                left: 50%;
-                top: 0;
-                transform: translate(-50%, -100%);
-                border: 5px solid transparent;
-                border-right-color: transparent;
-                border-top-color: rgba(255, 255, 255, 0.98);
-                filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.05));
-            }
-
-            .hero-like-btn:hover .hero-like-hint,
-            .hero-like-btn:focus-visible .hero-like-hint,
-            .hero-like-btn.is-hint-on .hero-like-hint {
-                transform: translateX(-50%) translateY(2px);
-            }
-        }
-
+        /* 点赞后：拇指右侧仅显示数字（移动端/桌面一致） */
         .hero-like-count {
             display: none;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            color: #ff3b30;
+            padding-bottom: 0.14rem;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-like-btn.is-liked .hero-like-count {
+            display: inline-block;
         }
 
     </style>
@@ -1734,7 +1673,7 @@
                                 d="M1 21h4V9H1v12zm20-10c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"
                             />
                         </svg>
-                        <span id="hero-like-hint" class="hero-like-hint" role="tooltip"></span>
+                        <span id="hero-like-count" class="hero-like-count" aria-hidden="true"></span>
                     </button>
                 </span>
             </h1>
@@ -1903,10 +1842,10 @@
 
         function resolveLikeProvider(likesCfg) {
             var p = likesCfg && typeof likesCfg.provider === 'string' ? likesCfg.provider.toLowerCase() : '';
-            if (p === 'abacus' || p === 'remote') return 'abacus';
             if (p === 'local') return 'local';
-            if (p === 'countapi') return 'local';
-            return 'local';
+            if (p === 'abacus' || p === 'remote') return 'abacus';
+            if (p === 'countapi') return 'abacus';
+            return 'abacus';
         }
 
         function fetchLikeTotal(likesCfg) {
@@ -1966,22 +1905,36 @@
             return tpl.split('{count}').join(String(n));
         }
 
-        function setHeroLikeUi(btn, hintEl, liked, count, ui) {
+        function setHeroLikeUi(btn, countEl, liked, count, ui) {
             if (!btn) return;
+            var n = typeof count === 'number' && count >= 0 ? count : 0;
+            if (liked && n < 1) n = 1;
+
             btn.classList.toggle('is-liked', liked);
             btn.setAttribute('aria-pressed', liked ? 'true' : 'false');
+
+            var hintText = formatLikeHoverHint(ui, count, liked);
+            btn.setAttribute('title', hintText);
+
+            var ariaCount = liked && n > 0 ? String(n) : '';
             btn.setAttribute(
                 'aria-label',
                 liked
-                    ? ui && ui.likeAriaLabelActive
-                        ? ui.likeAriaLabelActive
-                        : '已点赞'
+                    ? (ui && ui.likeAriaLabelActive ? ui.likeAriaLabelActive : '已点赞') +
+                      (ariaCount ? '，' + hintText : '')
                     : ui && ui.likeAriaLabel
                       ? ui.likeAriaLabel
                       : '点赞'
             );
-            if (hintEl) {
-                hintEl.textContent = formatLikeHoverHint(ui, count, liked);
+
+            if (countEl) {
+                if (liked && n > 0) {
+                    countEl.textContent = String(n);
+                    countEl.removeAttribute('aria-hidden');
+                } else {
+                    countEl.textContent = '';
+                    countEl.setAttribute('aria-hidden', 'true');
+                }
             }
         }
 
@@ -1989,7 +1942,7 @@
             if (!likesCfg || !likesCfg.enabled) return;
 
             var btn = document.getElementById('hero-like-btn');
-            var hintEl = document.getElementById('hero-like-hint');
+            var countEl = document.getElementById('hero-like-count');
             if (!btn) return;
 
             var currentLikeCount = 0;
@@ -2000,23 +1953,10 @@
 
             btn.removeAttribute('hidden');
             btn.disabled = true;
-            setHeroLikeUi(btn, hintEl, false, 0, ui);
-
-            btn.addEventListener('mouseenter', function () {
-                btn.classList.add('is-hint-on');
-            });
-            btn.addEventListener('mouseleave', function () {
-                btn.classList.remove('is-hint-on');
-            });
-            btn.addEventListener('focus', function () {
-                btn.classList.add('is-hint-on');
-            });
-            btn.addEventListener('blur', function () {
-                btn.classList.remove('is-hint-on');
-            });
+            setHeroLikeUi(btn, countEl, false, 0, ui);
 
             function applyLikedState() {
-                setHeroLikeUi(btn, hintEl, true, currentLikeCount, ui);
+                setHeroLikeUi(btn, countEl, true, currentLikeCount, ui);
                 try {
                     localStorage.setItem(LIKE_STORAGE_KEY, '1');
                     localStorage.setItem(likedKey, '1');
@@ -2027,7 +1967,7 @@
                 return fetchLikeTotal(likesCfg).then(function (val) {
                     if (typeof val === 'number' && val >= 0) {
                         currentLikeCount = val;
-                        setHeroLikeUi(btn, hintEl, liked, currentLikeCount, ui);
+                        setHeroLikeUi(btn, countEl, liked, currentLikeCount, ui);
                     }
                 });
             }
@@ -2053,7 +1993,7 @@
                 incrementLikeTotal(likesCfg).then(function (val) {
                     if (typeof val === 'number') {
                         currentLikeCount = val;
-                        setHeroLikeUi(btn, hintEl, true, currentLikeCount, ui);
+                        setHeroLikeUi(btn, countEl, true, currentLikeCount, ui);
                     }
                 });
             });

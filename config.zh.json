@@ -27,7 +27,7 @@
   "analytics": {
     "likes": {
       "enabled": true,
-      "provider": "local",
+      "provider": "abacus",
       "localTotalKey": "homepage-like-total-v1",
       "abacusNamespace": "abcreatoris.com",
       "totalLikesKey": "total-likes"
