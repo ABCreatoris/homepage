@@ -92,10 +92,10 @@
                 justify-content: flex-start;
                 max-width: min(23rem, 94vw);
                 gap: 0;
-                margin-top: 0.75rem;
+                margin-top: 0.5rem;
                 margin-left: auto;
                 margin-right: auto;
-                padding: 0.25rem 0.75rem 0.5rem;
+                padding: 0.15rem 0.5rem 0.35rem;
                 font-size: 1rem;
                 line-height: 1.55;
                 background: none;
@@ -118,7 +118,7 @@
                 max-width: 20rem;
                 text-align: center;
                 text-decoration: none;
-                padding: 1.2rem 1rem 1.35rem;
+                padding: 0.55rem 0.75rem 0.62rem;
                 min-height: 0;
                 border-radius: 0;
                 background: transparent;
@@ -136,7 +136,7 @@
                 display: block;
                 width: min(3.25rem, 28vw);
                 height: 1px;
-                margin: 0 auto 0.15rem;
+                margin: 0 auto 0.08rem;
                 background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent);
             }
 
@@ -180,7 +180,7 @@
 
             .content-links__desc {
                 display: block;
-                margin-top: 0.45rem;
+                margin-top: 0.28rem;
                 font-size: 0.8125rem;
                 font-weight: 400;
                 letter-spacing: 0.02em;
@@ -383,84 +383,6 @@
             }
         }
 
-        /* 窄屏手机（如 iPhone 12）：主内容压入一屏，避免纵向滚动条；仅作用于已展示的主页 */
-        @media (max-width: 767.98px) {
-            body:has(#main-content.show) {
-                height: 100dvh;
-                max-height: 100dvh;
-                overflow: hidden;
-            }
-
-            #main-content.layout-stack.show {
-                height: 100dvh;
-                max-height: 100dvh;
-                min-height: 0 !important;
-                overflow: hidden;
-                box-sizing: border-box;
-                gap: clamp(0.35rem, 1vh, 0.65rem);
-                padding-top: calc(0.35rem + env(safe-area-inset-top, 0px)) !important;
-                padding-bottom: calc(0.2rem + env(safe-area-inset-bottom, 0px)) !important;
-            }
-
-            #main-content.show .header-hero__cluster {
-                margin-bottom: 0.35rem;
-            }
-
-            #main-content.show .header-avatar-slot {
-                width: 7.25rem;
-                height: 7.25rem;
-            }
-
-            #main-content.show .header-flair {
-                min-height: 4.75rem;
-            }
-
-            #main-content.show .hero-title {
-                font-size: clamp(1.75rem, 8vw, 2.125rem);
-                margin-bottom: 0.25rem;
-            }
-
-            #main-content.show #tagline-main {
-                font-size: 0.9375rem;
-                line-height: 1.35;
-            }
-
-            #main-content.show #social-icons {
-                margin-top: 0;
-            }
-
-            #main-content.show .content-links {
-                margin-top: 0.1rem;
-                padding: 0;
-            }
-
-            #main-content.show .content-links__a {
-                padding: 0.62rem 0.75rem 0.68rem;
-            }
-
-            #main-content.show .content-links__desc {
-                margin-top: 0.3rem;
-            }
-
-            #main-content.show #quote-section {
-                padding-top: 0.12rem;
-                padding-bottom: calc(0.3rem + env(safe-area-inset-bottom, 0px));
-            }
-
-            #main-content.show .quote-container {
-                padding: 0.15rem 0.35rem 0.2rem;
-            }
-
-            #main-content.show .font-quote {
-                font-size: clamp(1rem, 2.8vw, 1.125rem);
-                line-height: 1.42;
-            }
-
-            #main-content.show .quote-attribution {
-                margin-top: 0.38rem;
-            }
-        }
-        
         .hero-title {
             font-size: clamp(2.125rem, 5.5vw, 3.25rem);
             line-height: 1.06;
@@ -797,17 +719,8 @@
             transform-origin: 100% 100%;
         }
 
-        /* 节假日角标：圆心落在头像圆边（右下约 45°） */
-        .avatar-presence-badge--holiday {
-            left: calc(50% + var(--avatar-r) * 0.70710678 - 1rem);
-            top: calc(50% + var(--avatar-r) * 0.70710678 - 1rem);
-            right: auto;
-            bottom: auto;
-            width: var(--avatar-badge-hit, 2.55rem);
-            height: var(--avatar-badge-hit, 2.55rem);
-        }
-
-        /* 在职 / 周末角标：圆心在头像圆周 */
+        /* 角标圆心落在头像圆周右下约 45°（节假日 / 在职 / 周末共用几何） */
+        .avatar-presence-badge--holiday,
         .avatar-presence-badge--work,
         .avatar-presence-badge--weekend {
             left: var(--badge-anchor-x);
@@ -2622,7 +2535,27 @@
             extraSpacing: 0.05
         };
 
+        /** 按头像实际尺寸更新角标锚点（与 w-40 及过渡动画终点一致） */
+        function syncAvatarBadgeGeometry() {
+            var slot = document.querySelector('.header-avatar-slot');
+            if (!slot) return;
+            var size = slot.offsetWidth;
+            if (!size) return;
+            var rPx = size / 2;
+            slot.style.setProperty('--avatar-r', rPx + 'px');
+            var badgeRem = Math.max(2.15, Math.min(2.55, size / 16 * 0.26)).toFixed(3) + 'rem';
+            slot.style.setProperty('--avatar-badge-hit', badgeRem);
+        }
+
+        function getHeaderAvatarSlotRect() {
+            var slot = document.querySelector('.header-avatar-slot');
+            if (!slot) return null;
+            syncAvatarBadgeGeometry();
+            return slot.getBoundingClientRect();
+        }
+
         function revealPresenceBadge() {
+            syncAvatarBadgeGeometry();
             var el = document.getElementById('avatar-presence-badge');
             if (!el || el.hasAttribute('hidden')) return;
             el.classList.remove('is-revealed');
@@ -2656,6 +2589,7 @@
         function onMainIntroAnimationsComplete() {
             if (mainIntroAnimComplete) return;
             mainIntroAnimComplete = true;
+            syncAvatarBadgeGeometry();
             renderPresenceBadge();
             playAvatarPreBadgeWiggle(function () {
                 revealPresenceBadge();
@@ -3429,11 +3363,9 @@
             const mainContent = document.getElementById('main-content');
             const avatarTransition = document.getElementById('avatar-transition');
             const initialAvatar = document.querySelector('.initial-avatar');
-            const finalAvatar = document.querySelector('#main-content .avatar');
             
             // 获取初始头像位置和大小
             const initialAvatarRect = initialAvatar.getBoundingClientRect();
-            const finalAvatarRect = finalAvatar.getBoundingClientRect();
             
             // 设置过渡头像的初始位置和大小
             avatarTransition.style.width = initialAvatarRect.width + 'px';
@@ -3446,12 +3378,14 @@
             setTimeout(() => {
                 initialLayout.classList.add('minimized');
                 
-                // 2. 头像动画过渡到最终位置
+                // 2. 头像动画过渡到最终位置（按 header 槽位实时测量，避免移动端写死 160px 错位）
                 setTimeout(() => {
-                    avatarTransition.style.width = '160px';
-                    avatarTransition.style.height = '160px';
-                    avatarTransition.style.left = finalAvatarRect.left + 'px';
-                    avatarTransition.style.top = finalAvatarRect.top + 'px';
+                    const finalSlotRect = getHeaderAvatarSlotRect();
+                    if (!finalSlotRect) return;
+                    avatarTransition.style.width = finalSlotRect.width + 'px';
+                    avatarTransition.style.height = finalSlotRect.height + 'px';
+                    avatarTransition.style.left = finalSlotRect.left + 'px';
+                    avatarTransition.style.top = finalSlotRect.top + 'px';
                     
                     // 3. 显示主内容区域
                     setTimeout(() => {
@@ -3460,7 +3394,8 @@
                         // 4. 隐藏过渡头像并显示最终头像
                         setTimeout(() => {
                             avatarTransition.classList.add('hidden');
-                            
+                            syncAvatarBadgeGeometry();
+
                             // 5. 先显示社交图标
                             setTimeout(() => {
                                 const socialIcons = document.querySelectorAll('.social-icon');
@@ -3510,6 +3445,15 @@
                 }
             });
             scheduleQuoteAutoRotate();
+
+            var badgeGeomResizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(badgeGeomResizeTimer);
+                badgeGeomResizeTimer = setTimeout(function () {
+                    syncAvatarBadgeGeometry();
+                    if (mainIntroAnimComplete) renderPresenceBadge();
+                }, 120);
+            });
         });
 
         /** 触控 / 窄屏：社交里的微信、QQ用自定义协议唤起 App */
