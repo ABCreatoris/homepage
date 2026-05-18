@@ -1831,12 +1831,53 @@
                 });
         }
 
+        function abacusGetWithRetry(namespace, key, retriesLeft) {
+            return abacusGet(namespace, key).then(function (val) {
+                if (val !== null) return val;
+                if (retriesLeft <= 0) return null;
+                return new Promise(function (resolve) {
+                    window.setTimeout(resolve, 450);
+                }).then(function () {
+                    return abacusGetWithRetry(namespace, key, retriesLeft - 1);
+                });
+            });
+        }
+
+        function abacusHitWithRetry(namespace, key, retriesLeft) {
+            return abacusHit(namespace, key).then(function (val) {
+                if (val !== null) return val;
+                if (retriesLeft <= 0) return null;
+                return new Promise(function (resolve) {
+                    window.setTimeout(resolve, 450);
+                }).then(function () {
+                    return abacusHitWithRetry(namespace, key, retriesLeft - 1);
+                });
+            });
+        }
+
         function resolveLikeProvider(likesCfg) {
             var p = likesCfg && typeof likesCfg.provider === 'string' ? likesCfg.provider.toLowerCase() : '';
             if (p === 'local') return 'local';
             if (p === 'abacus' || p === 'remote') return 'abacus';
             if (p === 'countapi') return 'abacus';
             return 'abacus';
+        }
+
+        function likeAbacusKeys(likesCfg, visitorId) {
+            var ns =
+                (likesCfg && likesCfg.abacusNamespace) ||
+                (likesCfg && likesCfg.countApiNamespace) ||
+                'abcreatoris.com';
+            var prefix =
+                likesCfg && typeof likesCfg.likedVisitorKeyPrefix === 'string'
+                    ? likesCfg.likedVisitorKeyPrefix
+                    : 'liked-';
+            var totalKey = (likesCfg && likesCfg.totalLikesKey) || 'total-likes';
+            return {
+                ns: ns,
+                visitorKey: prefix + visitorId,
+                totalKey: totalKey
+            };
         }
 
         function fetchLikeTotal(likesCfg) {
@@ -1848,18 +1889,25 @@
             if (provider === 'local') {
                 return Promise.resolve(readLocalLikeTotal(localKey));
             }
-            var ns =
-                (likesCfg && likesCfg.abacusNamespace) ||
-                (likesCfg && likesCfg.countApiNamespace) ||
-                'abcreatoris.com';
-            var totalKey = (likesCfg && likesCfg.totalLikesKey) || 'total-likes';
-            return abacusGet(ns, totalKey).then(function (val) {
-                if (typeof val === 'number' && val >= 0) return val;
-                return readLocalLikeTotal(localKey);
+            var keys = likeAbacusKeys(likesCfg, '');
+            return abacusGetWithRetry(keys.ns, keys.totalKey, 2).then(function (val) {
+                if (typeof val === 'number' && val >= 0) {
+                    writeLocalLikeTotal(val, localKey);
+                    return val;
+                }
+                return null;
             });
         }
 
-        function incrementLikeTotal(likesCfg) {
+        function fetchVisitorLikedOnServer(likesCfg, visitorId) {
+            var keys = likeAbacusKeys(likesCfg, visitorId);
+            return abacusGetWithRetry(keys.ns, keys.visitorKey, 2).then(function (val) {
+                return typeof val === 'number' && val >= 1;
+            });
+        }
+
+        /** 首次点赞：登记访客 + 全局总数 +1；已登记则只拉取总数 */
+        function registerLikeOnServer(likesCfg, visitorId) {
             var provider = resolveLikeProvider(likesCfg);
             var localKey =
                 likesCfg && typeof likesCfg.localTotalKey === 'string'
@@ -1870,26 +1918,30 @@
                 writeLocalLikeTotal(next, localKey);
                 return Promise.resolve(next);
             }
-            var ns =
-                (likesCfg && likesCfg.abacusNamespace) ||
-                (likesCfg && likesCfg.countApiNamespace) ||
-                'abcreatoris.com';
-            var totalKey = (likesCfg && likesCfg.totalLikesKey) || 'total-likes';
-            return abacusHit(ns, totalKey).then(function (val) {
+            var keys = likeAbacusKeys(likesCfg, visitorId);
+            return abacusGetWithRetry(keys.ns, keys.visitorKey, 2).then(function (marked) {
+                var already = typeof marked === 'number' && marked >= 1;
+                if (already) {
+                    return abacusGetWithRetry(keys.ns, keys.totalKey, 2);
+                }
+                return abacusHitWithRetry(keys.ns, keys.visitorKey, 2).then(function () {
+                    return abacusHitWithRetry(keys.ns, keys.totalKey, 2);
+                });
+            }).then(function (val) {
                 if (typeof val === 'number' && val >= 0) {
                     writeLocalLikeTotal(val, localKey);
                     return val;
                 }
-                var fallback = readLocalLikeTotal(localKey) + 1;
-                writeLocalLikeTotal(fallback, localKey);
-                return fallback;
+                return null;
             });
         }
 
         function formatLikeHoverHint(ui, count, liked) {
-            var n = typeof count === 'number' && count >= 0 ? count : 0;
-            if (liked && n < 1) n = 1;
-            if (n < 1) {
+            var n = typeof count === 'number' && count >= 0 ? count : null;
+            if (n === null || n < 1) {
+                if (liked) {
+                    return ui && ui.likeHoverHint ? ui.likeHoverHint.split('{count}').join('…') : '点赞数同步中…';
+                }
                 return ui && ui.likeHoverHintEmpty ? ui.likeHoverHintEmpty : '期待你的点赞';
             }
             var tpl = ui && ui.likeHoverHint ? ui.likeHoverHint : '已有{count}位访客点赞';
@@ -1898,28 +1950,26 @@
 
         function setHeroLikeUi(btn, countEl, liked, count, ui) {
             if (!btn) return;
-            var n = typeof count === 'number' && count >= 0 ? count : 0;
-            if (liked && n < 1) n = 1;
+            var n = typeof count === 'number' && count >= 0 ? count : null;
 
             btn.classList.toggle('is-liked', liked);
             btn.setAttribute('aria-pressed', liked ? 'true' : 'false');
 
-            var hintText = formatLikeHoverHint(ui, count, liked);
+            var hintText = formatLikeHoverHint(ui, n, liked);
             btn.setAttribute('title', hintText);
 
-            var ariaCount = liked && n > 0 ? String(n) : '';
             btn.setAttribute(
                 'aria-label',
                 liked
                     ? (ui && ui.likeAriaLabelActive ? ui.likeAriaLabelActive : '已点赞') +
-                      (ariaCount ? '，' + hintText : '')
+                      (n !== null && n > 0 ? '，' + hintText : '')
                     : ui && ui.likeAriaLabel
                       ? ui.likeAriaLabel
                       : '点赞'
             );
 
             if (countEl) {
-                if (liked && n > 0) {
+                if (liked && n !== null && n > 0) {
                     countEl.textContent = String(n);
                     countEl.removeAttribute('aria-hidden');
                 } else {
@@ -1936,7 +1986,7 @@
             var countEl = document.getElementById('hero-like-count');
             if (!btn) return;
 
-            var currentLikeCount = 0;
+            var currentLikeCount = null;
             var visitorId = getOrCreateVisitorId();
             var likedKey = LIKE_STORAGE_KEY + '-' + visitorId;
             var liked = false;
@@ -1944,47 +1994,77 @@
 
             btn.removeAttribute('hidden');
             btn.disabled = true;
-            setHeroLikeUi(btn, countEl, false, 0, ui);
+            setHeroLikeUi(btn, countEl, false, null, ui);
 
-            function applyLikedState() {
-                setHeroLikeUi(btn, countEl, true, currentLikeCount, ui);
+            function markLikedLocal() {
                 try {
                     localStorage.setItem(LIKE_STORAGE_KEY, '1');
                     localStorage.setItem(likedKey, '1');
                 } catch (e) {}
             }
 
+            function applyLikedState() {
+                setHeroLikeUi(btn, countEl, true, currentLikeCount, ui);
+                markLikedLocal();
+            }
+
             function refreshTotalCount() {
                 return fetchLikeTotal(likesCfg).then(function (val) {
                     if (typeof val === 'number' && val >= 0) {
                         currentLikeCount = val;
-                        setHeroLikeUi(btn, countEl, liked, currentLikeCount, ui);
                     }
+                    setHeroLikeUi(btn, countEl, liked, currentLikeCount, ui);
                 });
             }
 
+            function finishBootstrap() {
+                ready = true;
+                if (!liked) btn.disabled = false;
+            }
+
+            var localLiked = false;
             try {
-                if (localStorage.getItem(LIKE_STORAGE_KEY) === '1' || localStorage.getItem(likedKey) === '1') {
-                    liked = true;
-                    applyLikedState();
-                }
+                localLiked =
+                    localStorage.getItem(LIKE_STORAGE_KEY) === '1' ||
+                    localStorage.getItem(likedKey) === '1';
             } catch (e) {}
 
-            ready = true;
-            refreshTotalCount().finally(function () {
-                if (!liked) btn.disabled = false;
-            });
+            if (resolveLikeProvider(likesCfg) === 'local') {
+                if (localLiked) {
+                    liked = true;
+                    currentLikeCount = readLocalLikeTotal(
+                        likesCfg.localTotalKey || LIKE_TOTAL_LS_KEY
+                    );
+                    applyLikedState();
+                }
+                finishBootstrap();
+                return;
+            }
+
+            Promise.all([fetchVisitorLikedOnServer(likesCfg, visitorId), refreshTotalCount()])
+                .then(function (results) {
+                    if (localLiked || results[0]) {
+                        liked = true;
+                        applyLikedState();
+                        if (typeof currentLikeCount !== 'number') {
+                            return refreshTotalCount();
+                        }
+                    }
+                })
+                .finally(finishBootstrap);
 
             btn.addEventListener('click', function () {
                 if (!ready || liked) return;
-                liked = true;
-                applyLikedState();
                 btn.disabled = true;
 
-                incrementLikeTotal(likesCfg).then(function (val) {
-                    if (typeof val === 'number') {
+                registerLikeOnServer(likesCfg, visitorId).then(function (val) {
+                    liked = true;
+                    if (typeof val === 'number' && val >= 0) {
                         currentLikeCount = val;
-                        setHeroLikeUi(btn, countEl, true, currentLikeCount, ui);
+                    }
+                    applyLikedState();
+                    if (typeof currentLikeCount !== 'number') {
+                        return refreshTotalCount();
                     }
                 });
             });

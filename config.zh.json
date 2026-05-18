@@ -30,7 +30,8 @@
       "provider": "abacus",
       "localTotalKey": "homepage-like-total-v1",
       "abacusNamespace": "abcreatoris.com",
-      "totalLikesKey": "total-likes"
+      "totalLikesKey": "total-likes",
+      "likedVisitorKeyPrefix": "liked-"
     }
   },
   "avatarMedia": {
@@ -172,10 +173,10 @@
   "quotes": {
     "mottosTitle": "我的座右铭",
     "mottos": [
-      { "text": "记不得和放不下过去的人没有现在及未来" },
-      { "text": "认真对待自己的选择，未经思考的现在塑就未来" },
-      { "text": "解决问题的能力在于智力和应变力" },
-      { "text": "情绪和态度时常比理性更底层、更有价值" }
+      { "text": "记不得和放不下过去的人没有现在及未来。" },
+      { "text": "认真对待自己的选择，未经思考的现在塑就未来。" },
+      { "text": "解决问题的能力在于智力和应变力。" },
+      { "text": "情绪和态度时常比理性更底层、更有价值。" }
     ],
     "famous": [
       {
