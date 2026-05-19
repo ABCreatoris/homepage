@@ -1936,6 +1936,26 @@
             });
         }
 
+        /** ≥1万：X.Yw；整数部分为两位数（10–99）时不显示小数 */
+        function formatLikeCountDisplay(count) {
+            if (typeof count !== 'number' || count < 0) return '';
+            if (count < 10000) return String(count);
+
+            var value = count / 10000;
+            var rounded = Math.round(value * 10) / 10;
+            var x = Math.floor(rounded);
+
+            if (x >= 10 && x <= 99) {
+                return String(x) + 'w';
+            }
+
+            var y = Math.round((rounded - x) * 10);
+            if (y === 0) {
+                return String(x) + 'w';
+            }
+            return String(x) + '.' + String(y) + 'w';
+        }
+
         function formatLikeHoverHint(ui, count, liked) {
             var n = typeof count === 'number' && count >= 0 ? count : null;
             if (n === null || n < 1) {
@@ -1945,7 +1965,7 @@
                 return ui && ui.likeHoverHintEmpty ? ui.likeHoverHintEmpty : '期待你的点赞';
             }
             var tpl = ui && ui.likeHoverHint ? ui.likeHoverHint : '已有{count}位访客点赞';
-            return tpl.split('{count}').join(String(n));
+            return tpl.split('{count}').join(formatLikeCountDisplay(n));
         }
 
         function setHeroLikeUi(btn, countEl, liked, count, ui) {
@@ -1970,7 +1990,7 @@
 
             if (countEl) {
                 if (liked && n !== null && n > 0) {
-                    countEl.textContent = String(n);
+                    countEl.textContent = formatLikeCountDisplay(n);
                     countEl.removeAttribute('aria-hidden');
                 } else {
                     countEl.textContent = '';
