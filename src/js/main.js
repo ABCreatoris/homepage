@@ -72,24 +72,7 @@
         let siteContentLinks = [];
 
         var mainIntroAnimComplete = false;
-        var avatarFlairHideTimer = null;
-        var avatarTapPhraseIndex = 0;
-        var headerFlairDistortRaf = null;
-        var lastHeaderFlairShiftRem = null;
 
-        var HEADER_FLAIR_DISTORT = {
-            duration: 1500,
-            maxScale: 28,
-            maxBlur: 3,
-            blurFadePortion: 0.28,
-            baseFreqX: 0.048,
-            baseFreqY: 0.095,
-            extraSpacing: 0.05,
-            maxOutwardPx: 132,
-            charFromXEm: 3.4
-        };
-
-        /** 按头像实际尺寸更新角标锚点（与 w-40 及过渡动画终点一致） */
         function syncAvatarBadgeGeometry() {
             var slot = document.querySelector('.header-avatar-slot');
             if (!slot) return;
