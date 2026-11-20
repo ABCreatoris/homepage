@@ -1,8 +1,8 @@
 
-        /* 社交图标：单行；字号用固定阶梯，不用多级 clamp */
+        /* 社交图标：空间不足时自然换行，避免窄屏隐藏入口 */
         #social-icons {
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
@@ -13,13 +13,7 @@
             padding-left: 0.5rem;
             padding-right: 0.5rem;
             box-sizing: border-box;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        #social-icons::-webkit-scrollbar {
-            display: none;
+            overflow: visible;
         }
 
         #social-icons .social-icon {
@@ -29,7 +23,7 @@
             line-height: 1;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 639.98px) {
             #social-icons {
                 gap: 0.45rem;
                 padding-left: 0.35rem;
@@ -174,7 +168,7 @@
         @media (min-width: 640px) {
             #social-icons {
                 gap: 1.25rem;
-                overflow-x: visible;
+                overflow: visible;
             }
 
             #social-icons .social-icon {
@@ -243,7 +237,7 @@
             transition: color 0.15s ease, text-decoration-color 0.15s ease;
         }
 
-        @media (min-width: 641px) {
+        @media (min-width: 640px) {
             .content-links__a:hover {
                 color: #004499;
                 text-decoration: underline;
@@ -255,7 +249,7 @@
             outline: none;
         }
 
-        @media (min-width: 641px) {
+        @media (min-width: 640px) {
             .content-links__a:focus-visible {
                 outline: 2px solid rgba(0, 102, 204, 0.45);
                 outline-offset: 2px;

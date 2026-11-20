@@ -117,7 +117,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         syncAvatarBadgeGeometry,
         renderCards: renderConfiguredCards,
         updateQuote: advanceNext => quoteController.update(advanceNext),
-        onMainIntroAnimationsComplete
+        onMainIntroAnimationsComplete,
+        prefersReducedMotion
     });
 
     const quoteContainer = document.getElementById('quote-container');

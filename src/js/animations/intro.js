@@ -1,74 +1,94 @@
-/** Coordinate the original homepage intro sequence without owning page state. */
-export function startAnimationSequence({
+/** Run the homepage intro in sequence, following real transitions where possible. */
+export async function startAnimationSequence({
     getHeaderAvatarSlotRect,
     syncAvatarBadgeGeometry,
     renderCards,
     updateQuote,
-    onMainIntroAnimationsComplete
+    onMainIntroAnimationsComplete,
+    prefersReducedMotion
 }) {
-            // 获取相关元素
-            const initialLayout = document.getElementById('initial-layout');
-            const mainContent = document.getElementById('main-content');
-            const avatarTransition = document.getElementById('avatar-transition');
-            const initialAvatar = document.querySelector('.initial-avatar');
-            
-            // 获取初始头像位置和大小
-            const initialAvatarRect = initialAvatar.getBoundingClientRect();
-            
-            // 设置过渡头像的初始位置和大小
-            avatarTransition.style.width = initialAvatarRect.width + 'px';
-            avatarTransition.style.height = initialAvatarRect.height + 'px';
-            avatarTransition.style.left = initialAvatarRect.left + 'px';
-            avatarTransition.style.top = initialAvatarRect.top + 'px';
-            avatarTransition.classList.remove('hidden');
-            
-            // 1. 初始布局淡出
-            setTimeout(() => {
-                initialLayout.classList.add('minimized');
-                
-                // 2. 头像动画过渡到最终位置（按 header 槽位实时测量，避免移动端写死 160px 错位）
-                setTimeout(() => {
-                    const finalSlotRect = getHeaderAvatarSlotRect();
-                    if (!finalSlotRect) return;
-                    avatarTransition.style.width = finalSlotRect.width + 'px';
-                    avatarTransition.style.height = finalSlotRect.height + 'px';
-                    avatarTransition.style.left = finalSlotRect.left + 'px';
-                    avatarTransition.style.top = finalSlotRect.top + 'px';
-                    
-                    // 3. 显示主内容区域
-                    setTimeout(() => {
-                        mainContent.classList.add('show');
-                        
-                        // 4. 隐藏过渡头像并显示最终头像
-                        setTimeout(() => {
-                            avatarTransition.classList.add('hidden');
-                            syncAvatarBadgeGeometry();
+    const initialLayout = document.getElementById('initial-layout');
+    const mainContent = document.getElementById('main-content');
+    const avatarTransition = document.getElementById('avatar-transition');
+    const initialAvatar = document.querySelector('.initial-avatar');
+    const quoteContainer = document.getElementById('quote-container');
+    const socialIcons = document.querySelectorAll('.social-icon');
 
-                            // 5. 先显示社交图标
-                            setTimeout(() => {
-                                const socialIcons = document.querySelectorAll('.social-icon');
-                                socialIcons.forEach((icon, index) => {
-                                    setTimeout(() => {
-                                        icon.classList.add('show');
-                                    }, index * 200);
-                                });
+    const showRemainingContent = () => {
+        if (initialLayout) initialLayout.classList.add('minimized');
+        if (avatarTransition) avatarTransition.classList.add('hidden');
+        if (mainContent) mainContent.classList.add('show');
+        socialIcons.forEach(icon => icon.classList.add('show'));
+        renderCards();
+        updateQuote(false);
+        if (quoteContainer) quoteContainer.classList.add('show');
+        if (typeof syncAvatarBadgeGeometry === 'function') syncAvatarBadgeGeometry();
+        onMainIntroAnimationsComplete();
+    };
 
-                                // 6. 正文文字链接 → 引言
-                                const cardsReveal = Math.max(420, socialIcons.length * 200 + 200);
-                                setTimeout(function () {
-                                    renderCards();
-                                }, cardsReveal);
+    if (!initialLayout || !mainContent || !avatarTransition || !initialAvatar || !quoteContainer) {
+        showRemainingContent();
+        return;
+    }
 
-                                const quoteDelay = Math.max(620, socialIcons.length * 200 + 520);
-                                setTimeout(() => {
-                                    updateQuote(false);
-                                    document.getElementById('quote-container').classList.add('show');
-                                    setTimeout(onMainIntroAnimationsComplete, 900);
-                                }, quoteDelay);
-                            }, 500);
-                        }, 800);
-                    }, 800);
-                }, 800);
-            }, 1500);
+    if (prefersReducedMotion && prefersReducedMotion()) {
+        initialLayout.classList.add('minimized');
+        avatarTransition.classList.add('hidden');
+        mainContent.classList.add('show');
+        showRemainingContent();
+        return;
+    }
 
+    const waitForTransition = (element, propertyName, fallbackMs) => new Promise(resolve => {
+        let settled = false;
+        const finish = () => {
+            if (settled) return;
+            settled = true;
+            element.removeEventListener('transitionend', onEnd);
+            window.clearTimeout(fallback);
+            resolve();
+        };
+        const onEnd = event => {
+            if (event.target === element && event.propertyName === propertyName) finish();
+        };
+        const fallback = window.setTimeout(finish, fallbackMs);
+        element.addEventListener('transitionend', onEnd);
+    });
+
+    const initialRect = initialAvatar.getBoundingClientRect();
+    avatarTransition.style.width = initialRect.width + 'px';
+    avatarTransition.style.height = initialRect.height + 'px';
+    avatarTransition.style.left = initialRect.left + 'px';
+    avatarTransition.style.top = initialRect.top + 'px';
+    avatarTransition.classList.remove('hidden');
+
+    initialLayout.classList.add('minimized');
+    await waitForTransition(initialLayout, 'opacity', 950);
+
+    const finalRect = getHeaderAvatarSlotRect();
+    if (finalRect) {
+        avatarTransition.style.width = finalRect.width + 'px';
+        avatarTransition.style.height = finalRect.height + 'px';
+        avatarTransition.style.left = finalRect.left + 'px';
+        avatarTransition.style.top = finalRect.top + 'px';
+        await waitForTransition(avatarTransition, 'left', 950);
+    }
+
+    mainContent.classList.add('show');
+    await waitForTransition(mainContent, 'opacity', 950);
+    avatarTransition.classList.add('hidden');
+    if (typeof syncAvatarBadgeGeometry === 'function') syncAvatarBadgeGeometry();
+
+    socialIcons.forEach((icon, index) => {
+        window.setTimeout(() => icon.classList.add('show'), index * 120);
+    });
+    const socialRevealDuration = socialIcons.length ? (socialIcons.length - 1) * 120 + 400 : 0;
+    await new Promise(resolve => window.setTimeout(resolve, socialRevealDuration));
+
+    renderCards();
+    await new Promise(resolve => window.setTimeout(resolve, 420));
+    updateQuote(false);
+    quoteContainer.classList.add('show');
+    await new Promise(resolve => window.setTimeout(resolve, 900));
+    onMainIntroAnimationsComplete();
 }
