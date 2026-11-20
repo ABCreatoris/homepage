@@ -47,16 +47,16 @@ function buildQuotePlayOrder(quotes) {
     return out;
 }
 function isEnglish(text) {
-    return /^[A-Za-z0-9\\s.,'"!?;:()\\-]+$/.test(text);
+    return /^[A-Za-z0-9\s.,'"!?;:()\-]+$/.test(text);
 }
 function segmentQuoteGlyphs(text) {
-    const hasCjk = /[\\u3040-\\u30ff\\u3400-\\u9fff\\uf900-\\ufaff]/.test(text);
+    const hasCjk = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/.test(text);
     const segments = [];
     if (hasCjk) {
-        for (const ch of text) segments.push({ text: ch, animate: !/\\s/.test(ch) });
+        for (const ch of text) segments.push({ text: ch, animate: !/\s/.test(ch) });
     } else {
-        text.split(/(\\s+)/).forEach(part => {
-            if (part) segments.push({ text: part, animate: !/^\\s+$/.test(part) });
+        text.split(/(\s+)/).forEach(part => {
+            if (part) segments.push({ text: part, animate: !/^\s+$/.test(part) });
         });
     }
     return segments;
@@ -93,8 +93,8 @@ export function createQuoteController({ prefersReducedMotion }) {
             quoteElem.textContent = quote.text;
             if (isEnglish(quote.text)) quoteElem.setAttribute('lang', 'en');
             else quoteElem.removeAttribute('lang');
-            authorEl.textContent = '\\u2014 ' + quote.author;
-            authorEl.classList.toggle('quote-attribution-cn', /[\\u4e00-\\u9fff]/.test(quote.author));
+            authorEl.textContent = '\u2014 ' + quote.author;
+            authorEl.classList.toggle('quote-attribution-cn', /[\u4e00-\u9fff]/.test(quote.author));
             return;
         }
         container.classList.remove('quote-play');
@@ -102,8 +102,8 @@ export function createQuoteController({ prefersReducedMotion }) {
         if (isEnglish(quote.text)) quoteElem.setAttribute('lang', 'en');
         else quoteElem.removeAttribute('lang');
         const glyphCount = fillQuoteGlyphs(quoteElem, quote.text);
-        authorEl.textContent = '\\u2014 ' + quote.author;
-        authorEl.classList.toggle('quote-attribution-cn', /[\\u4e00-\\u9fff]/.test(quote.author));
+        authorEl.textContent = '\u2014 ' + quote.author;
+        authorEl.classList.toggle('quote-attribution-cn', /[\u4e00-\u9fff]/.test(quote.author));
         container.style.setProperty('--quote-author-delay', (0.22 + glyphCount * 0.036) + 's');
         requestAnimationFrame(() => requestAnimationFrame(() => container.classList.add('quote-play')));
     }
