@@ -1,0 +1,232 @@
+
+        /* Header：头像左右炫酷逐字浮现 */
+        .header-hero__cluster {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            column-gap: clamp(0.35rem, 2.5vw, 0.85rem);
+            width: min(100%, 40rem);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        html[lang^='en'] .header-hero__cluster {
+            column-gap: clamp(0.75rem, 4vw, 1.5rem);
+            width: min(100%, 42rem);
+            padding-left: 0.35rem;
+            padding-right: 0.35rem;
+        }
+
+        .header-flair {
+            position: relative;
+            min-height: 10rem;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .header-flair--left {
+            justify-content: flex-end;
+        }
+
+        .header-flair--right {
+            justify-content: flex-start;
+        }
+
+        .header-flair-line {
+            --flair-shift: 0rem;
+            margin: 0;
+            max-width: none;
+            white-space: nowrap;
+            font-family: 'LXGW WenKai', 'Kaiti SC', 'STKaiti', KaiTi, serif;
+            font-size: clamp(0.9375rem, 2.5vw, 1.125rem);
+            font-weight: 400;
+            line-height: 1.4;
+            letter-spacing: 0.06em;
+            color: #1d1d1f;
+            transform: translateY(var(--flair-shift));
+            will-change: filter, opacity, transform;
+        }
+
+        html[lang^='en'] .header-flair-line {
+            font-family: 'Instrument Serif', 'Palatino Linotype', Georgia, serif;
+            font-weight: 400;
+            font-size: clamp(0.975rem, 2.5vw, 1.1875rem);
+            letter-spacing: var(--en-serif-tracking-flair);
+            line-height: 1.48;
+            word-spacing: 0.06em;
+            padding-left: 0.28em;
+            padding-right: 0.28em;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        .header-flair--left .header-flair-line {
+            text-align: right;
+        }
+
+        .header-flair--right .header-flair-line {
+            text-align: left;
+        }
+
+        /* 问候语：整句 SVG 湍流 + 逐字上下跳动归位 */
+        .header-flair-line.is-distorting {
+            filter: url(#header-flair-distort-filter);
+            opacity: 0.55;
+            transform: translateY(var(--flair-shift)) scale(1.03);
+        }
+
+        .header-flair-char {
+            --twist-r: 0deg;
+            --lift: 0.4em;
+            --from-x: 0em;
+            display: inline-block;
+            opacity: 0;
+            transform: translateX(var(--from-x)) translateY(var(--lift)) rotate(var(--twist-r));
+            transform-origin: 50% 100%;
+        }
+
+        .header-flair-line.is-live .header-flair-char {
+            animation: headerFlairCharSettle 0.78s cubic-bezier(0.34, 1.22, 0.48, 1) forwards;
+            animation-delay: calc(var(--fi, 0) * 42ms);
+        }
+
+        @keyframes headerFlairCharSettle {
+            0% {
+                opacity: 0;
+                transform: translateX(var(--from-x)) translateY(var(--lift)) rotate(var(--twist-r));
+            }
+            36% {
+                opacity: 0.92;
+                transform: translateX(calc(var(--from-x) * 0.38)) translateY(calc(var(--lift) * -0.55))
+                    rotate(calc(var(--twist-r) * 0.35));
+            }
+            62% {
+                opacity: 1;
+                transform: translateX(calc(var(--from-x) * 0.12)) translateY(0.07em)
+                    rotate(calc(var(--twist-r) * 0.1));
+            }
+            82% {
+                transform: translateX(calc(var(--from-x) * 0.04)) translateY(-0.05em) rotate(0deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) translateY(0) rotate(0deg);
+            }
+        }
+
+        .header-flair-line.is-sharp {
+            filter: none;
+            opacity: 1;
+            transform: translateY(var(--flair-shift)) scale(1);
+        }
+
+        .header-flair-line.is-out {
+            opacity: 0;
+            filter: none;
+            transform: translateY(var(--flair-shift)) scale(0.98);
+            transition: opacity 0.42s ease, transform 0.42s ease;
+        }
+
+        /* 手机 / 小屏：仅淡入淡出，不用湍流与逐字跳动 */
+        .header-flair-line--simple {
+            filter: none !important;
+            opacity: 0;
+            transition: opacity 0.32s ease;
+        }
+
+        .header-flair-line--simple.is-visible {
+            opacity: 1;
+        }
+
+        .header-flair-line--simple.is-out {
+            opacity: 0;
+        }
+
+        .header-flair-svg-defs {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        @media (max-width: 767.98px) {
+            .header-flair {
+                min-height: 6.5rem;
+            }
+
+            .header-flair-line {
+                font-size: 0.875rem;
+                letter-spacing: 0.04em;
+            }
+
+            html[lang^='en'] .header-flair-line {
+                font-size: 0.9625rem;
+                letter-spacing: 0.048em;
+                word-spacing: 0.05em;
+            }
+
+            html[lang^='en'] .header-hero__cluster {
+                column-gap: 0.65rem;
+            }
+
+            .header-flair-line.is-live .header-flair-char,
+            .header-flair-char {
+                animation: none !important;
+                opacity: 1;
+                transform: none;
+            }
+
+            .header-flair-line.is-distorting {
+                filter: none !important;
+                opacity: 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .header-flair-line.is-distorting {
+                filter: none;
+                opacity: 1;
+                transform: translateY(var(--flair-shift));
+            }
+
+            .header-flair-char,
+            .header-flair-line.is-live .header-flair-char {
+                opacity: 1;
+                transform: none;
+                animation: none;
+            }
+
+            .avatar-photo-stack .avatar-photo-full {
+                opacity: 1;
+                filter: none;
+                transition: none;
+            }
+
+            .avatar-photo-stack.is-sharp .avatar-photo-thumb,
+            .avatar-photo-stack.thumb-hidden .avatar-photo-thumb {
+                opacity: 0;
+            }
+        }
+        
+        .name-highlight {
+            color: #1d1d1f;
+            display: inline-block;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+                'Helvetica Neue', Arial, sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Hiragino Sans GB',
+                'Microsoft YaHei', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+        }
