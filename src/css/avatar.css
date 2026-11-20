@@ -32,7 +32,7 @@
             --badge-anchor-y: calc(50% + var(--avatar-r) * 0.70710678 - var(--badge-r));
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 639.98px) {
             .header-avatar-slot {
                 --avatar-badge-hit: 2.35rem;
             }
@@ -339,7 +339,7 @@
             transition: opacity 0.16s ease, transform 0.18s ease, visibility 0s;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 639.98px) {
             .avatar-presence-badge__hit {
                 padding: 0.2rem;
             }
