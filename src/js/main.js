@@ -264,7 +264,7 @@
                 clearTimeout(badgeGeomResizeTimer);
                 badgeGeomResizeTimer = setTimeout(function () {
                     syncAvatarBadgeGeometry();
-                    if (mainIntroAnimComplete) renderPresenceBadge();
+                    if (mainIntroAnimComplete) presenceController.renderPresenceBadge();
                 }, 120);
             });
         });
