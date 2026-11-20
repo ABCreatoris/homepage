@@ -1,6 +1,7 @@
 
         import { resolveSiteLocale } from './core/locale.js';
         import { loadSiteConfig as loadSiteConfigData } from './core/config.js';
+        import { normalizeSiteLinks } from './core/normalize.js';
         import { applyUiFromObject } from './components/profile.js';
         import { renderCards } from './components/cards.js';
         import { renderSocialIcons } from './components/social.js';
@@ -138,76 +139,6 @@
             });
         }
 
-        function normalizeLinksFromConfig(data) {
-            const social = Array.isArray(data.social) ? data.social : [];
-            const contentLinks = Array.isArray(data.contentLinks) ? data.contentLinks : [];
-
-            const socialNorm = social.filter(function (s) {
-                if (!s || typeof s.label !== 'string' || !s.label.length) return false;
-                if (s.iconKind === 'xiaohongshu') {
-                    return typeof s.href === 'string' && s.href.length > 0;
-                }
-                if (s.iconKind === 'wechat') {
-                    return (
-                        typeof s.wechatId === 'string' &&
-                        s.wechatId.trim().length > 0 &&
-                        typeof s.iconClass === 'string' &&
-                        s.iconClass.length > 0 &&
-                        typeof s.href === 'string'
-                    );
-                }
-                if (s.iconKind === 'qq') {
-                    var uq = typeof s.qqUin === 'string' ? String(s.qqUin).replace(/\D/g, '') : '';
-                    return (
-                        uq.length >= 5 &&
-                        uq.length <= 14 &&
-                        typeof s.iconClass === 'string' &&
-                        s.iconClass.length > 0 &&
-                        typeof s.href === 'string'
-                    );
-                }
-                if (typeof s.href !== 'string') return false;
-                return typeof s.iconClass === 'string' && s.iconClass.length > 0;
-            });
-
-            const linksNorm = contentLinks.filter(function (c) {
-                return c && typeof c.url === 'string' && typeof c.title === 'string' && c.title.length > 0;
-            });
-
-            if (socialNorm.length === 0 || linksNorm.length === 0) {
-                throw new Error('links empty');
-            }
-
-            siteSocialLinks = socialNorm.map(function (s) {
-                var ik =
-                    s.iconKind === 'xiaohongshu'
-                        ? 'xiaohongshu'
-                        : s.iconKind === 'wechat'
-                          ? 'wechat'
-                          : s.iconKind === 'qq'
-                            ? 'qq'
-                            : '';
-                return {
-                    href: s.href,
-                    label: s.label,
-                    iconClass: typeof s.iconClass === 'string' ? s.iconClass : '',
-                    iconKind: ik,
-                    cssClass: typeof s.cssClass === 'string' ? s.cssClass : '',
-                    wechatId: typeof s.wechatId === 'string' ? s.wechatId.trim() : '',
-                    qqUin:
-                        typeof s.qqUin === 'string' ? String(s.qqUin).replace(/\D/g, '') : ''
-                };
-            });
-
-            siteContentLinks = linksNorm.map(function (c) {
-                return {
-                    title: c.title,
-                    description: typeof c.description === 'string' ? c.description : '',
-                    url: c.url
-                };
-            });
-        }
-
         async function loadSiteConfig() {
             const result = await loadSiteConfigData(siteLocale);
             siteLocale = result.locale;
@@ -216,7 +147,9 @@
             siteUi = data.ui || {};
             try {
                 applyUiFromObject(data.ui);
-                normalizeLinksFromConfig(data);
+                const normalizedLinks = normalizeSiteLinks(data);
+                siteSocialLinks = normalizedLinks.socialLinks;
+                siteContentLinks = normalizedLinks.contentLinks;
                 quoteController.setQuotes(data.quotes);
             } catch (e) {
                 console.warn('[homepage] config links invalid:', e);
@@ -253,8 +186,8 @@
             quoteContainer.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    updateQuote(true);
-                    scheduleQuoteAutoRotate();
+                    quoteController.update(true);
+                    quoteController.scheduleAutoRotate();
                 }
             });
             scheduleQuoteAutoRotate();
