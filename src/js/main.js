@@ -1,6 +1,6 @@
 
         import { resolveSiteLocale } from './core/locale.js';
-        import { loadSiteConfig as loadSiteConfigData } from './core/config.js';
+        import { loadSiteConfig as loadSiteConfigData, createEmptySiteConfig } from './core/config.js';
         import { normalizeSiteLinks } from './core/normalize.js';
         import { applyUiFromObject } from './components/profile.js';
         import { renderCards } from './components/cards.js';
@@ -29,40 +29,6 @@
             return Object.keys(replacements).reduce(function (acc, k) {
                 return acc.split('{' + k + '}').join(replacements[k]);
             }, template);
-        }
-
-        /** 配置文件加载失败时的空壳（不含个人文案，仅保证结构） */
-        function createEmptySiteConfig(loc) {
-            return {
-                ui: {
-                    htmlLang: loc === 'zh' ? 'zh-CN' : 'en',
-                    pageTitle: '',
-                    nameDisplay: '',
-                    tagline: '',
-                    avatarAlt: '',
-                    socialNavAria: '',
-                    linksSectionAria: '',
-                    contentLinksNavAria: '',
-                    quoteSectionAria: '',
-                    quoteToggleAria: '',
-                    quoteToggleTitle: '',
-                    headerAvatarAria: '',
-                    mailCopySuccess: '',
-                    mailCopyManual: '',
-                    wechatCopySuccess: '',
-                    wechatCopyManual: '',
-                    wechatTitleDesktop: '',
-                    wechatTitleMobile: '',
-                    qqTitle: ''
-                },
-                avatarMedia: { fullUrl: '', thumbUrl: '', thumbSize: 32, fallbackUrl: '' },
-                avatarTap: { bubbles: [] },
-                presence: null,
-                social: [],
-                contentLinks: [],
-                quotes: { mottos: [], famous: [] },
-                analytics: { likes: { enabled: false } }
-            };
         }
 
         /** 社交平台 SVG（小红书不在 Font Awesome brands 中时改用） */
