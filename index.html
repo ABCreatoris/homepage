@@ -3212,18 +3212,8 @@
         async function loadSiteConfig() {
             const result = await loadSiteConfigData(siteLocale);
             siteLocale = result.locale;
-            var payload = result.data;
-            var data = await fetchSiteConfig(siteLocale);
-            if (!data) {
-                var altLoc = siteLocale === 'zh' ? 'en' : 'zh';
-                data = await fetchSiteConfig(altLoc);
-                if (data) siteLocale = altLoc;
-            }
-            if (!data) {
-                console.warn('[homepage] config.' + siteLocale + '.json unavailable; using empty shell.');
-                data = createEmptySiteConfig(siteLocale);
-            }
-            payload = data;
+            const data = result.data || createEmptySiteConfig(siteLocale);
+            const payload = data;
             siteUi = data.ui || {};
             try {
                 applyUiFromObject(data.ui);
