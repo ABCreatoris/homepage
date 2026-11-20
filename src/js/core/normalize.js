@@ -1,7 +1,7 @@
 /** Normalize social and content links from the site JSON configuration. */
 export function normalizeSiteLinks(data) {
             const social = Array.isArray(data.social) ? data.social : [];
-            const contentLinks = Array.isArray(data.contentLinks) ? data.contentLinks : [];
+            const contentLinksRaw = Array.isArray(data.contentLinks) ? data.contentLinks : [];
 
             const socialNorm = social.filter(function (s) {
                 if (!s || typeof s.label !== 'string' || !s.label.length) return false;
@@ -31,7 +31,7 @@ export function normalizeSiteLinks(data) {
                 return typeof s.iconClass === 'string' && s.iconClass.length > 0;
             });
 
-            const linksNorm = contentLinks.filter(function (c) {
+            const linksNorm = contentLinksRaw.filter(function (c) {
                 return c && typeof c.url === 'string' && typeof c.title === 'string' && c.title.length > 0;
             });
 
