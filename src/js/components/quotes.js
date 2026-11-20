@@ -72,7 +72,7 @@ function fillQuoteGlyphs(quoteElem, text) {
         const span = document.createElement('span');
         span.className = 'quote-glyph';
         span.textContent = seg.text;
-        span.style.setProperty('--qi', String(idx++));
+        span.style.setProperty('--qi', String(Math.min(idx++, 32)));
         quoteElem.appendChild(span);
     });
     return idx;
@@ -104,7 +104,9 @@ export function createQuoteController({ prefersReducedMotion }) {
         const glyphCount = fillQuoteGlyphs(quoteElem, quote.text);
         authorEl.textContent = '\u2014 ' + quote.author;
         authorEl.classList.toggle('quote-attribution-cn', /[\u4e00-\u9fff]/.test(quote.author));
-        container.style.setProperty('--quote-author-delay', (0.22 + glyphCount * 0.036) + 's');
+        const staggeredGlyphs = Math.min(Math.max(glyphCount - 1, 0), 32);
+        const authorDelaySec = 0.64 + staggeredGlyphs * 0.024;
+        container.style.setProperty('--quote-author-delay', authorDelaySec + 's');
         requestAnimationFrame(() => requestAnimationFrame(() => container.classList.add('quote-play')));
     }
     function scheduleAutoRotate() {
