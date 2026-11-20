@@ -15,6 +15,9 @@ export async function startAnimationSequence({
     const socialIcons = document.querySelectorAll('.social-icon');
 
     const showRemainingContent = () => {
+        if (initialLayout) initialLayout.classList.add('minimized');
+        if (avatarTransition) avatarTransition.classList.add('hidden');
+        if (mainContent) mainContent.classList.add('show');
         socialIcons.forEach(icon => icon.classList.add('show'));
         renderCards();
         updateQuote(false);
