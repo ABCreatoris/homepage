@@ -254,7 +254,7 @@
                 return;
             }
 
-            var hol = findHolidayToday(sitePresence.holidays);
+            var hol = findHolidayToday(avatarFeature.presence.holidays);
             if (hol && hol.icon) {
                 var holHints = hol.hoverHints && hol.hoverHints.length ? hol.hoverHints : hol.hoverHint || hol.title || '';
                 mountPresenceBadgeWithHint(el, 'holiday', holHints, function (hit) {
@@ -263,8 +263,8 @@
                 return;
             }
 
-            if (shouldShowWeekendBadge(sitePresence)) {
-                var we = sitePresence.weekendBadge || {};
+            if (shouldShowWeekendBadge(avatarFeature.presence)) {
+                var we = avatarFeature.presence.weekendBadge || {};
                 mountPresenceBadgeWithHint(el, 'weekend', we.hoverHints || [], function (hit) {
                     renderPresenceBadgeIcon(
                         hit,
@@ -275,8 +275,8 @@
                 return;
             }
 
-            if (shouldShowWorkBadge(sitePresence)) {
-                var wb = sitePresence.workBadge || {};
+            if (shouldShowWorkBadge(avatarFeature.presence)) {
+                var wb = avatarFeature.presence.workBadge || {};
                 mountPresenceBadgeWithHint(el, 'work', wb.hoverHints || [], function (hit) {
                     renderPresenceBadgeIcon(
                         hit,
