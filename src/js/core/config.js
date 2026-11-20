@@ -76,3 +76,36 @@ export async function loadSiteConfig(locale) {
 
     return { locale: resolvedLocale, data };
 }
+
+export function createEmptySiteConfig(loc) {
+            return {
+                ui: {
+                    htmlLang: loc === 'zh' ? 'zh-CN' : 'en',
+                    pageTitle: '',
+                    nameDisplay: '',
+                    tagline: '',
+                    avatarAlt: '',
+                    socialNavAria: '',
+                    linksSectionAria: '',
+                    contentLinksNavAria: '',
+                    quoteSectionAria: '',
+                    quoteToggleAria: '',
+                    quoteToggleTitle: '',
+                    headerAvatarAria: '',
+                    mailCopySuccess: '',
+                    mailCopyManual: '',
+                    wechatCopySuccess: '',
+                    wechatCopyManual: '',
+                    wechatTitleDesktop: '',
+                    wechatTitleMobile: '',
+                    qqTitle: ''
+                },
+                avatarMedia: { fullUrl: '', thumbUrl: '', thumbSize: 32, fallbackUrl: '' },
+                avatarTap: { bubbles: [] },
+                presence: null,
+                social: [],
+                contentLinks: [],
+                quotes: { mottos: [], famous: [] },
+                analytics: { likes: { enabled: false } }
+            };
+}
