@@ -54,7 +54,7 @@
                 wrap.classList.add('avatar-wrap--ready');
                 wrap.setAttribute('tabindex', '0');
                 avatarFlairController.bindHeaderAvatarInteractions();
-            });
+            }, prefersReducedMotion);
         }
 
         async function loadSiteConfig() {
