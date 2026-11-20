@@ -1,0 +1,371 @@
+        
+        /* 开场头像保留装饰环；正文区内头像改为干净阴影 */
+        .initial-layout .avatar,
+        .avatar-transition {
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8), 0 0 0 10px rgba(156, 163, 175, 0.2);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        
+        .initial-layout .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.9), 0 0 0 16px rgba(156, 163, 175, 0.3);
+        }
+        
+        #main-content .avatar,
+        #header-avatar-wrap {
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        
+        #main-content .header-avatar-slot:hover #header-avatar-wrap {
+            transform: scale(1.03);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-avatar-slot {
+            overflow: visible;
+            --avatar-r: 5rem;
+            --avatar-badge-hit: 2.55rem;
+            --badge-r: calc(var(--avatar-badge-hit) / 2);
+            /* 右下角 45°：角标圆心落在头像圆周上 */
+            --badge-anchor-x: calc(50% + var(--avatar-r) * 0.70710678 - var(--badge-r));
+            --badge-anchor-y: calc(50% + var(--avatar-r) * 0.70710678 - var(--badge-r));
+        }
+
+        @media (max-width: 640px) {
+            .header-avatar-slot {
+                --avatar-badge-hit: 2.35rem;
+            }
+        }
+
+        /* 渐进头像：小图铺色 → 大图单层渐清（transition，避免关键帧/类切换闪烁） */
+        .avatar-photo-stack {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            background: radial-gradient(circle at 50% 42%, #ececf1 0%, #e2e3ea 100%);
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .avatar-photo-stack .avatar-photo-thumb,
+        .avatar-photo-stack .avatar-photo-full {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+
+        .avatar-photo-stack .avatar-photo-thumb {
+            filter: blur(28px) saturate(1.05);
+            opacity: 0;
+            z-index: 0;
+            transition: opacity 0.45s ease;
+            pointer-events: none;
+        }
+
+        .avatar-photo-stack.thumb-ready .avatar-photo-thumb {
+            opacity: 1;
+        }
+
+        .avatar-photo-stack.thumb-hidden .avatar-photo-thumb {
+            opacity: 0;
+            transition: none;
+        }
+
+        .avatar-photo-stack.is-sharp .avatar-photo-thumb {
+            opacity: 0;
+        }
+
+        .avatar-photo-stack .avatar-photo-full {
+            opacity: 0;
+            filter: blur(20px);
+            z-index: 1;
+            transition: filter 1.55s cubic-bezier(0.25, 1, 0.35, 1);
+        }
+
+        .avatar-photo-stack.full-loaded .avatar-photo-full {
+            opacity: 1;
+            transition:
+                opacity 0.35s ease,
+                filter 1.55s cubic-bezier(0.25, 1, 0.35, 1);
+        }
+
+        .avatar-photo-stack.is-sharp .avatar-photo-full {
+            opacity: 1;
+            filter: blur(0);
+        }
+
+        #header-avatar-wrap {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #header-avatar-wrap.avatar-wrap--ready {
+            cursor: pointer;
+        }
+
+        #header-avatar-wrap.avatar-wrap--ready:focus-visible {
+            outline: 2px solid rgba(0, 102, 204, 0.45);
+            outline-offset: 4px;
+            border-radius: 9999px;
+        }
+
+        .avatar-presence-badge {
+            position: absolute;
+            z-index: 5;
+            pointer-events: auto;
+            line-height: 1;
+            opacity: 0;
+        }
+
+        .header-avatar-slot.avatar-wiggle-pre-badge {
+            animation: avatarPreBadgeWiggle 0.58s cubic-bezier(0.36, 0.07, 0.2, 1);
+            transform-origin: center center;
+        }
+
+        @keyframes avatarPreBadgeWiggle {
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+            18% {
+                transform: rotate(-5deg);
+            }
+            36% {
+                transform: rotate(4.5deg);
+            }
+            54% {
+                transform: rotate(-3deg);
+            }
+            72% {
+                transform: rotate(2deg);
+            }
+            88% {
+                transform: rotate(-0.8deg);
+            }
+        }
+
+        .avatar-presence-badge.is-revealed {
+            animation: presenceBadgeReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes presenceBadgeReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.75);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .avatar-presence-badge--work.is-revealed,
+        .avatar-presence-badge--weekend.is-revealed,
+        .avatar-presence-badge--holiday.is-revealed {
+            transform-origin: 100% 100%;
+        }
+
+        /* 角标圆心落在头像圆周右下约 45°（节假日 / 在职 / 周末共用几何） */
+        .avatar-presence-badge--holiday,
+        .avatar-presence-badge--work,
+        .avatar-presence-badge--weekend {
+            left: var(--badge-anchor-x);
+            top: var(--badge-anchor-y);
+            right: auto;
+            bottom: auto;
+            width: var(--avatar-badge-hit, 2.55rem);
+            height: var(--avatar-badge-hit, 2.55rem);
+        }
+
+        .avatar-presence-badge--hinted {
+            display: block;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            cursor: default;
+        }
+
+        .avatar-presence-badge--hinted::before {
+            content: '';
+            position: absolute;
+            left: 100%;
+            top: 0;
+            width: 0.55rem;
+            height: 100%;
+        }
+
+        /* 外圈：与页面底色一致，无边框、无描边阴影 */
+        .avatar-presence-badge__hit {
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0.24rem;
+            box-sizing: border-box;
+            background: var(--page-bg);
+            border: none;
+            box-shadow: none;
+        }
+
+        /* 内圈：纯色/渐变填充，无边框，承载图标 */
+        .avatar-presence-badge__core {
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: none;
+            box-shadow: 0 2px 9px rgba(0, 0, 0, 0.14);
+        }
+
+        /* 工作日：商务蓝 */
+        .avatar-presence-badge--work .avatar-presence-badge__core {
+            background: linear-gradient(
+                148deg,
+                #5b9fd4 0%,
+                #2f6fad 42%,
+                #1e4f8a 78%,
+                #163d6e 100%
+            );
+            box-shadow:
+                0 2px 10px rgba(30, 79, 138, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        /* 周末：孔雀绿 / 祖母绿宝石感 */
+        .avatar-presence-badge--weekend .avatar-presence-badge__core {
+            background: linear-gradient(
+                148deg,                #3ecf9a 0%,
+                #18a87a 38%,
+                #0d7d62 72%,
+                #065f4a 100%
+            );
+            box-shadow:
+                0 2px 10px rgba(13, 125, 98, 0.48),
+                inset 0 1px 0 rgba(180, 255, 220, 0.28);
+        }
+
+        /* 假期：暖金琥珀（与蓝、绿区分） */
+        .avatar-presence-badge--holiday .avatar-presence-badge__core {
+            background: linear-gradient(
+                148deg,
+                #f5c76a 0%,
+                #e39a3a 45%,
+                #c76b1a 82%,
+                #a34f12 100%
+            );
+            box-shadow:
+                0 2px 10px rgba(167, 79, 18, 0.4),
+                inset 0 1px 0 rgba(255, 240, 200, 0.35);
+        }
+
+        .avatar-presence-badge__core--emoji {
+            font-size: 1.02rem;
+            line-height: 1;
+        }
+
+        .presence-badge-fa {
+            font-size: 0.95rem;
+            line-height: 1;
+            display: block;
+            color: rgba(255, 255, 255, 0.96);
+            filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.22));
+        }
+
+        .avatar-presence-badge--work .presence-badge-fa {
+            color: #f0f7ff;
+        }
+
+        .avatar-presence-badge--weekend .presence-badge-fa {
+            color: #ecfff6;
+        }
+
+        .avatar-presence-badge__hint {
+            position: absolute;
+            left: calc(100% + 0.5rem);
+            top: 50%;
+            max-width: min(14rem, 72vw);
+            margin: 0;
+            padding: 0.48rem 0.72rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            line-height: 1.4;
+            text-align: left;
+            white-space: nowrap;
+            color: #1d1d1f;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-50%) translateX(-4px);
+            transition: opacity 0.14s ease, transform 0.16s ease, visibility 0s linear 0.14s;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .avatar-presence-badge--work .avatar-presence-badge__hint {
+            border-color: rgba(47, 111, 173, 0.28);
+            box-shadow: 0 8px 24px rgba(30, 79, 138, 0.16), 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .avatar-presence-badge--weekend .avatar-presence-badge__hint {
+            border-color: rgba(13, 125, 98, 0.28);
+            box-shadow: 0 8px 24px rgba(13, 125, 98, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .avatar-presence-badge--holiday .avatar-presence-badge__hint {
+            border-color: rgba(199, 107, 26, 0.28);
+            box-shadow: 0 8px 24px rgba(167, 79, 18, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .avatar-presence-badge--hinted.is-hint-on .avatar-presence-badge__hint {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(0);
+            transition: opacity 0.16s ease, transform 0.18s ease, visibility 0s;
+        }
+
+        @media (max-width: 640px) {
+            .avatar-presence-badge__hit {
+                padding: 0.2rem;
+            }
+
+            .presence-badge-fa {
+                font-size: 0.88rem;
+            }
+
+            .avatar-presence-badge__hint {
+                white-space: normal;
+                max-width: min(11rem, 62vw);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .avatar-presence-badge__hint {
+                transition: none;
+            }
+
+            .avatar-presence-badge.is-revealed {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+
+            .header-avatar-slot.avatar-wiggle-pre-badge {
+                animation: none;
+            }
+        }

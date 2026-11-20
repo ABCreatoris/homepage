@@ -1,0 +1,435 @@
+
+        /* 引言：小于主标题，但保持正文级易读（约 18～23px） */
+        .font-quote {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Hiragino Sans GB',
+                'Microsoft YaHei', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.015em;
+            font-size: clamp(1.125rem, 2.35vw + 0.55rem, 1.4375rem);
+            line-height: 1.5;
+            color: rgba(29, 29, 31, 0.9);
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .quote-attribution {
+            margin-top: 0.85rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            color: rgba(72, 72, 78, 0.95);
+        }
+
+        .quote-attribution.quote-attribution-cn {
+            letter-spacing: 0.1em;
+            font-size: 0.875rem;
+        }
+
+        .font-card-title {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+        }
+
+        .font-card-content {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            font-weight: 400;
+        }
+
+        /* 英文页：衬线标题/引言 + 无衬线正文，避免 PingFang 混入英文排版 */
+        html[lang^='en'] body {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+                sans-serif;
+            font-feature-settings: 'kern' 1, 'liga' 1;
+            -webkit-font-smoothing: antialiased;        }
+
+        html[lang^='en'] .font-display,
+        html[lang^='en'] .hero-title,
+        html[lang^='en'] .initial-name {
+            font-family: 'Instrument Serif', 'Palatino Linotype', Georgia, 'Times New Roman', serif;
+            font-weight: 400;
+            letter-spacing: var(--en-serif-tracking);
+            line-height: 1.14;
+            text-rendering: optimizeLegibility;
+        }
+
+        html[lang^='en'] .hero-title {
+            letter-spacing: 0.028em;
+            line-height: 1.16;
+            padding-left: 0.12em;
+            padding-right: 0.12em;
+        }
+
+        html[lang^='en'] .font-quote {
+            font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: var(--en-serif-tracking);
+            line-height: var(--en-serif-line);
+            word-spacing: 0.05em;
+            text-rendering: optimizeLegibility;
+        }
+
+        html[lang^='en'] #quote.font-quote {
+            padding-left: 0.9em;
+            padding-right: 0.9em;
+        }
+
+        html[lang^='en'] .quote-container {
+            padding-left: var(--en-serif-side);
+            padding-right: var(--en-serif-side);
+            box-sizing: border-box;
+        }
+
+        html[lang^='en'] #quote-section {
+            max-width: 38rem;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            box-sizing: border-box;
+        }
+
+        html[lang^='en'] #quote.font-quote::before,
+        html[lang^='en'] #quote.font-quote::after {
+            font-family: 'Instrument Serif', Georgia, serif;
+            letter-spacing: 0;
+        }
+
+        html[lang^='en'] #quote.font-quote::before {
+            left: 0.06em;
+        }
+
+        html[lang^='en'] #quote.font-quote::after {
+            right: 0.06em;
+        }
+
+        html[lang^='en'] .quote-attribution {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: none;
+        }
+
+        html[lang^='en'] .quote-attribution.quote-attribution-cn {
+            letter-spacing: 0.04em;
+            font-size: 0.8125rem;
+        }
+
+        html[lang^='en'] #tagline-main,
+        html[lang^='en'] #tagline-initial {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        html[lang^='en'] .section-eyebrow,
+        html[lang^='en'] .section-label {
+            font-family: 'Source Sans 3', sans-serif;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+        }
+
+        html[lang^='en'] .content-links__title,
+        html[lang^='en'] .content-links__desc,
+        html[lang^='en'] .content-links__a,
+        html[lang^='en'] .font-card-title,
+        html[lang^='en'] .font-card-content {
+            font-family: inherit;
+            letter-spacing: 0.01em;
+        }
+
+        html[lang^='en'] .content-links__title,
+        html[lang^='en'] .font-card-title {
+            font-weight: 600;
+        }
+
+        html[lang^='en'] .avatar-presence-badge__hint,
+        html[lang^='en'] .hero-like-count {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        
+        .github-icon {
+            color: #181717;
+        }
+        
+        .github-icon:hover {
+            color: #4078c0;
+        }
+        
+        .linkedin-icon {
+            color: #0077B5;
+        }
+        
+        .linkedin-icon:hover {
+            color: #005582;
+        }
+        
+        .wechat-icon {
+            color: #07C160;
+        }
+        
+        .wechat-icon:hover {
+            color: #05A84C;
+        }
+        
+        .qq-icon {
+            color: #12B7F5;
+        }
+        
+        .qq-icon:hover {
+            color: #0D9DDB;
+        }
+        
+        .email-icon {
+            color: #708090;
+        }
+        
+        .email-icon:hover {
+            color: #36454F;
+        }
+        
+        .weibo-icon {
+            color: #E6162D; /* 让图标保持默认颜色 */
+            background: none; /* 移除背景渐变 */
+            -webkit-text-fill-color: unset; /* 恢复文本填充的默认颜色 */
+        }
+        .weibo-icon:hover {
+            color: #C7172A; /* 让图标悬停时颜色也保持默认 */ 
+        }
+        
+        .bilibili-icon {
+            color: #FB7299;
+        }
+        
+        .bilibili-icon:hover {
+            color: #FF85AD;
+        }
+
+        .xiaohongshu-icon {
+            color: #ff2442;
+        }
+
+        .xiaohongshu-icon:hover {
+            color: #e61e3d;
+        }
+
+        .social-icon .xhs-svg {
+            display: block;
+            width: 1em;
+            height: 1em;
+        }
+        
+        /* 初始布局样式 */
+        .initial-layout {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            z-index: 10;
+            transition: all 0.8s ease;
+            pointer-events: none;
+        }
+        
+        .initial-layout.minimized {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s ease, opacity 0.8s ease, visibility 0s 0.8s;
+        }
+        
+        .initial-avatar {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+        }
+        
+        .initial-name {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .initial-title {
+            font-size: 1.5rem;
+        }
+        
+        /* 内容容器 */
+        .content-container {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .content-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 主内容区域 */
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        
+        #main-content.show {
+            opacity: 1;
+        }
+        
+        /* 头像过渡动画：不拦截点击，避免盖住主内容期间邮箱等链接无法点 */
+        .avatar-transition {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 20;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.8), 0 0 0 10px rgba(156, 163, 175, 0.2);
+        }
+        
+        .avatar-transition .avatar-photo-stack,
+        .avatar-transition .avatar-photo-thumb,
+        .avatar-transition .avatar-photo-full {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 淡雅底衬，衬托磨砂卡片 */
+        body.min-h-screen.antialiased {
+            background-color: var(--page-bg);
+            background-image:
+                radial-gradient(ellipse 120% 55% at 50% -25%, rgba(255, 255, 255, 0.85), transparent 52%),
+                radial-gradient(ellipse 55% 38% at 95% 35%, rgba(220, 225, 238, 0.35), transparent 58%),
+                radial-gradient(ellipse 50% 36% at 6% 65%, rgba(228, 230, 240, 0.4), transparent 56%);
+        }
+
+        /* 确保页面不会水平滚动 */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+        
+        /* 点击邮箱：复制成功后的轻提示（桌面端无邮件客户端时至少可粘贴） */
+        #mail-toast {
+            position: fixed;
+            z-index: 10000;
+            left: 50%;
+            bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+            transform: translateX(-50%) translateY(120%);
+            max-width: min(22rem, calc(100vw - 2rem));
+            padding: 0.65rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            text-align: center;
+            color: #1d1d1f;
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.25s;
+        }
+
+        #mail-toast.mail-toast--visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 姓名居中；大拇指绝对定位在名字右下角，不占排版宽度 */
+        .hero-name-wrap {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            overflow: visible;
+        }
+
+        .hero-like-btn {
+            position: absolute;
+            left: 100%;
+            bottom: 0;
+            top: auto;
+            margin-left: 0.14rem;
+            transform: none;
+            transform-origin: bottom left;
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 0.15rem;
+            margin-top: 0;
+            padding: 0.1rem;
+            border: none;
+            background: transparent;
+            color: #aeaeb2;
+            cursor: pointer;
+            line-height: 1;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            transition: color 0.22s ease, transform 0.15s ease;
+        }
+
+        .hero-like-btn:hover {
+            color: #86868b;
+        }
+
+        .hero-like-btn:focus-visible {
+            outline: 2px solid rgba(0, 102, 204, 0.35);
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+
+        .hero-like-btn:not(.is-liked) .hero-like-btn__icon path {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.85;
+            stroke-linejoin: round;
+        }
+
+        .hero-like-btn.is-liked .hero-like-btn__icon path {
+            fill: currentColor;
+            stroke: none;
+        }
+
+        .hero-like-btn.is-liked {
+            color: #ff3b30;
+        }
+
+        .hero-like-btn.is-liked:hover {
+            color: #e6352b;
+        }
+
+        .hero-like-btn:active {
+            transform: scale(0.92);
+        }
+
+        .hero-like-btn__icon {
+            width: 1.38rem;
+            height: 1.38rem;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        /* 点赞后：拇指右侧仅显示数字（移动端/桌面一致） */
+        .hero-like-count {
+            display: none;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            color: #ff3b30;
+            padding-bottom: 0.14rem;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-like-btn.is-liked .hero-like-count {
+            display: inline-block;
+        }
+
+    
