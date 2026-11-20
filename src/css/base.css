@@ -1,0 +1,25 @@
+        :root {
+            --page-bg: #f2f2f6;
+        }
+
+        html[lang^='en'] {
+            --en-serif-tracking: 0.034em;
+            --en-serif-tracking-flair: 0.052em;
+            --en-serif-line: 1.58;
+            --en-serif-side: 1.15rem;
+        }
+
+        .social-icon {
+            transition: opacity 0.3s ease, transform 0.35s ease;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        
+        .social-icon.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .social-icon:hover {
+            opacity: 0.65;
+        }
