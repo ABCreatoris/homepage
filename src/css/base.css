@@ -1,5 +1,32 @@
         :root {
             --page-bg: #f2f2f6;
+            --font-ui: 'Source Sans 3', 'LXGW WenKai', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+            --font-display: 'Instrument Serif', 'LXGW WenKai', 'Songti SC', 'STSong', Georgia, serif;
+            --font-quote: 'Songti SC', 'STSong', 'Noto Serif CJK SC', 'Source Han Serif SC',
+                'Hiragino Mincho ProN', 'Microsoft YaHei', serif;
+        }
+
+        body {
+            font-family: var(--font-ui);
+        }
+
+        .font-display {
+            font-family: var(--font-display);
+        }
+
+        .font-quote {
+            font-family: var(--font-quote);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         html[lang^='en'] {
