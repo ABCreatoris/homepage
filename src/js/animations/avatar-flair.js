@@ -16,14 +16,14 @@ export function createAvatarFlairController({ getPhrases, prefersReducedMotion, 
         charFromXEm: 3.4
     };
     function segmentHeaderFlairGlyphs(text) {
-        const hasCjk = /[\\u3040-\\u30ff\\u3400-\\u9fff\\uf900-\\ufaff]/.test(text);
+        const hasCjk = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/.test(text);
         const segments = [];
         if (hasCjk) {
-            for (const ch of text) segments.push({ text: ch, animate: !/\\s/.test(ch) });
+            for (const ch of text) segments.push({ text: ch, animate: !/\s/.test(ch) });
         } else {
-            text.split(/(\\s+)/).forEach(function (part) {
+            text.split(/(\s+)/).forEach(function (part) {
                 if (!part) return;
-                segments.push({ text: part, animate: !/^\\s+$/.test(part) });
+                segments.push({ text: part, animate: !/^\s+$/.test(part) });
             });
         }
         return segments;
