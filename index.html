@@ -1687,6 +1687,7 @@
 
     <script type="module">
         import { resolveSiteLocale } from './src/js/core/locale.js';
+        import { loadSiteConfig as loadSiteConfigData } from './src/js/core/config.js';
 
         /** 境内 CN → 中文；境外 → 英文。失败时按浏览器语言回退。 */
         let siteLocale = 'zh';
@@ -3005,36 +3006,6 @@
             });
         }
 
-        /**
-         * 与当前页面所在「目录」解析 config.zh.json / config.en.json 等。
-         * 避免 GitHub Pages 类地址为 …/repo（无尾斜杠）时相对路径落到站点根目录 404。
-         */
-        function resolveAssetUrl(filename) {
-            const baseEl = document.querySelector('base[href]');
-            if (baseEl && baseEl.href) {
-                return new URL(filename, baseEl.href).href;
-            }
-            let path = window.location.pathname || '/';
-            if (!path.endsWith('/')) {
-                const last = path.split('/').pop() || '';
-                if (/\.[a-z0-9]+$/i.test(last)) {
-                    path = path.replace(/\/[^/]+$/, '/');
-                } else {
-                    path = path + '/';
-                }
-            }
-            return new URL(filename, window.location.origin + path).href;
-        }
-
-        function isValidSiteConfig(data) {
-            if (!data || typeof data !== 'object') return false;
-            if (!data.ui || typeof data.ui !== 'object') return false;
-            if (!Array.isArray(data.social) || data.social.length === 0) return false;
-            if (!Array.isArray(data.contentLinks) || data.contentLinks.length === 0) return false;
-            if (!quoteConfigHasItems(data.quotes)) return false;
-            return true;
-        }
-
         function applyUiFromObject(t) {
             document.documentElement.lang = t.htmlLang;
             document.title = t.pageTitle;
@@ -3238,19 +3209,10 @@
             });
         }
 
-        async function fetchSiteConfig(loc) {
-            try {
-                const res = await fetch(resolveAssetUrl('config.' + loc + '.json'), { cache: 'no-store' });
-                if (!res.ok) return null;
-                const data = await res.json();
-                return isValidSiteConfig(data) ? data : null;
-            } catch (e) {
-                return null;
-            }
-        }
-
         async function loadSiteConfig() {
-            var payload;
+            const result = await loadSiteConfigData(siteLocale);
+            siteLocale = result.locale;
+            var payload = result.data;
             var data = await fetchSiteConfig(siteLocale);
             if (!data) {
                 var altLoc = siteLocale === 'zh' ? 'en' : 'zh';
