@@ -59,12 +59,20 @@
     "companyMatchSubstring": "Baidu",
     "workBadge": {
       "icon": "briefcase",
-      "hoverHints": ["Employed at Baidu", "Love building with tech", "Coffee sometime?"]
+      "hoverHints": [
+        "Employed at Baidu",
+        "Love building with tech",
+        "Coffee sometime?"
+      ]
     },
     "weekendBadge": {
       "enabled": true,
       "icon": "home",
-      "hoverHints": ["Relaxing at home", "Photosynthesis mode", "Growing freely"]
+      "hoverHints": [
+        "Relaxing at home",
+        "Photosynthesis mode",
+        "Growing freely"
+      ]
     },
     "holidays": [
       {
@@ -173,10 +181,18 @@
   "quotes": {
     "mottosTitle": "My mottos",
     "mottos": [
-      { "text": "Cling to the past and you forfeit the present and future." },
-      { "text": "Honor your choices—an unexamined today shapes tomorrow." },
-      { "text": "Solving problems takes wit and adaptability." },
-      { "text": "Emotion and attitude often run deeper than reason—and matter more." }
+      {
+        "text": "Cling to the past and you forfeit the present and future."
+      },
+      {
+        "text": "Learn to recognize and navigate pivotal choices; decisions made without rational thought can be fatal."
+      },
+      {
+        "text": "Solving problems takes wit and adaptability."
+      },
+      {
+        "text": "Emotion and attitude often run deeper than reason—and matter more."
+      }
     ],
     "famous": [
       {
