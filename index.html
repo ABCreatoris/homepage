@@ -1689,6 +1689,9 @@
         import { resolveSiteLocale } from './src/js/core/locale.js';
         import { loadSiteConfig as loadSiteConfigData } from './src/js/core/config.js';
         import { applyUiFromObject } from './src/js/components/profile.js';
+        import { renderCards } from './src/js/components/cards.js';
+        import { renderSocialIcons } from './src/js/components/social.js';
+        import { showMailToast, copyTextToClipboard, bindMailtoClick } from './src/js/features/clipboard.js';
 
         /** 境内 CN → 中文；境外 → 英文。失败时按浏览器语言回退。 */
         let siteLocale = 'zh';
@@ -3288,117 +3291,6 @@
             });
         }
         
-        function showMailToast(message) {
-            var el = document.getElementById('mail-toast');
-            if (!el) {
-                el = document.createElement('div');
-                el.id = 'mail-toast';
-                el.setAttribute('role', 'status');
-                el.setAttribute('aria-live', 'polite');
-                document.body.appendChild(el);
-            }
-            el.textContent = message;
-            el.classList.add('mail-toast--visible');
-            clearTimeout(showMailToast._hideTimer);
-            showMailToast._hideTimer = setTimeout(function () {
-                el.classList.remove('mail-toast--visible');
-            }, 3200);
-        }
-
-        function copyTextToClipboard(text) {
-            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-                return navigator.clipboard.writeText(text);
-            }
-            return new Promise(function (resolve, reject) {
-                try {
-                    var ta = document.createElement('textarea');
-                    ta.value = text;
-                    ta.setAttribute('readonly', '');
-                    ta.style.position = 'fixed';
-                    ta.style.left = '-9999px';
-                    document.body.appendChild(ta);
-                    ta.select();
-                    ta.setSelectionRange(0, text.length);
-                    var ok = document.execCommand('copy');
-                    document.body.removeChild(ta);
-                    ok ? resolve() : reject(new Error('execCommand'));
-                } catch (err) {
-                    reject(err);
-                }
-            });
-        }
-
-        /** 先复制地址再打开 mailto：桌面端无客户端时仍可粘贴到网页邮箱 */
-        function bindMailtoClick(anchor, mailtoHref) {
-            if (!anchor || typeof mailtoHref !== 'string' || !/^mailto:/i.test(mailtoHref)) return;
-            var addr = mailtoHref.replace(/^mailto:/i, '').split('?')[0];
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                copyTextToClipboard(addr)
-                    .then(function () {
-                        showMailToast(uiMessage('mailCopySuccess'));
-                    })
-                    .catch(function () {
-                        showMailToast(uiMessage('mailCopyManual', { value: addr }));
-                    })
-                    .then(function () {
-                        /* 稍晚再打开 mailto，让底部提示先出现、可读 */
-                        window.setTimeout(function () {
-                            window.location.href = mailtoHref;
-                        }, 520);
-                    });
-            });
-        }
-
-        function renderCards() {
-            const container = document.getElementById('cards-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            siteContentLinks.forEach(function (item, index) {
-                if (index > 0) {
-                    const sep = document.createElement('span');
-                    sep.className = 'content-links__sep';
-                    sep.setAttribute('aria-hidden', 'true');
-                    sep.textContent = '\u00b7';
-                    container.appendChild(sep);
-                }
-
-                const a = document.createElement('a');
-                a.href = item.url;
-                a.className = 'card content-links__a';
-                const titleSpan = document.createElement('span');
-                titleSpan.className = 'content-links__title';
-                titleSpan.textContent = item.title;
-                a.appendChild(titleSpan);
-                if (typeof item.description === 'string' && item.description.length > 0) {
-                    a.setAttribute('aria-label', item.title + '：' + item.description);
-                    a.title = item.description;
-                    const descSpan = document.createElement('span');
-                    descSpan.className = 'content-links__desc';
-                    descSpan.textContent = item.description;
-                    descSpan.setAttribute('aria-hidden', 'true');
-                    a.appendChild(descSpan);
-                }
-                if (/^mailto:/i.test(item.url)) {
-                    var mailAddr = item.url.replace(/^mailto:/i, '').split('?')[0];
-                    a.title = a.title ? mailAddr + ' — ' + a.title : mailAddr;
-                    bindMailtoClick(a, item.url);
-                }
-                if (/^https?:\/\//i.test(item.url)) {
-                    a.target = '_blank';
-                    a.rel = 'noopener noreferrer';
-                }
-
-                container.appendChild(a);
-
-                setTimeout(function () {
-                    a.classList.add('show');
-                }, 800 + index * 70);
-            });
-        }
-        
-        
         // 动画序列
         function startAnimationSequence() {
             // 获取相关元素
@@ -3451,7 +3343,7 @@
                                 // 6. 正文文字链接 → 引言
                                 const cardsReveal = Math.max(420, socialIcons.length * 200 + 200);
                                 setTimeout(function () {
-                                    renderCards();
+                                    renderCards({ links: siteContentLinks, bindMailtoClick: function (anchor, href) { bindMailtoClick(anchor, href, { uiMessage }); } });
                                 }, cardsReveal);
 
                                 const quoteDelay = Math.max(620, socialIcons.length * 200 + 520);
@@ -3471,7 +3363,7 @@
             siteLocale = await resolveSiteLocale();
             await loadSiteConfig();
             quoteDisplayIndex = 0;
-            renderSocialIcons();
+            renderSocialIcons({ links: siteSocialLinks, uiMessage, copyTextToClipboard, showMailToast, bindMailtoClick: function (anchor, href) { bindMailtoClick(anchor, href, { uiMessage }); }, socialSvgXhs: SOCIAL_SVG_XHS });
 
             startAnimationSequence();
 
@@ -3498,84 +3390,7 @@
             });
         });
 
-        /** 触控 / 窄屏：社交里的微信、QQ用自定义协议唤起 App */
-        function shouldUseMobileContactScheme() {
-            if (window.matchMedia('(pointer: coarse)').matches) return true;
-            if (
-                window.matchMedia('(max-width: 767.98px)').matches &&
-                ((navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || 'ontouchstart' in window)
-            ) {
-                return true;
-            }
-            return false;
-        }
 
-        function renderSocialIcons() {
-            const container = document.getElementById('social-icons');
-            container.innerHTML = '';
-            siteSocialLinks.forEach(function (link) {
-                const a = document.createElement('a');
-                const cssExtra = link.cssClass ? link.cssClass : '';
-                a.className = 'social-icon' + (cssExtra ? ' ' + cssExtra : '');
-                a.setAttribute('aria-label', link.label);
-
-                var useMobileScheme = shouldUseMobileContactScheme();
-
-                if (link.iconKind === 'wechat' && link.wechatId) {
-                    if (useMobileScheme) {
-                        a.href = 'weixin://dl/business/?t=' + encodeURIComponent(link.wechatId);
-                        a.title = uiMessage('wechatTitleMobile', { value: link.wechatId });
-                    } else {
-                        a.href = '#';
-                        a.title = uiMessage('wechatTitleDesktop', { value: link.wechatId });
-                        a.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            copyTextToClipboard(link.wechatId)
-                                .then(function () {
-                                    showMailToast(uiMessage('wechatCopySuccess'));
-                                })
-                                .catch(function () {
-                                    showMailToast(uiMessage('wechatCopyManual', { value: link.wechatId }));
-                                });
-                        });
-                    }
-                } else if (link.iconKind === 'qq' && link.qqUin) {
-                    var uin = link.qqUin;
-                    if (useMobileScheme) {
-                        a.href =
-                            'mqqwpa://im/chat?chat_type=wpa&uin=' +
-                            uin +
-                            '&version=1&src_type=web&web_src=abcreatoris.com';
-                        a.title = uiMessage('qqTitle', { value: uin });
-                    } else {
-                        a.href = 'https://wpa.qq.com/msgrd?v=3&uin=' + uin + '&site=qq&menu=yes';
-                        a.target = '_blank';
-                        a.rel = 'noopener noreferrer';
-                        a.title = uiMessage('qqTitle', { value: uin });
-                    }
-                } else {
-                    a.href = link.href;
-                    if (/^https?:\/\//i.test(link.href)) {
-                        a.target = '_blank';
-                        a.rel = 'noopener noreferrer';
-                    }
-                    if (/^mailto:/i.test(link.href)) {
-                        a.title = link.href.replace(/^mailto:/i, '').split('?')[0];
-                        bindMailtoClick(a, link.href);
-                    }
-                }
-
-                if (link.iconKind === 'xiaohongshu') {
-                    a.innerHTML = SOCIAL_SVG_XHS;
-                } else {
-                    const i = document.createElement('i');
-                    i.className = link.iconClass;
-                    i.setAttribute('aria-hidden', 'true');
-                    a.appendChild(i);
-                }
-                container.appendChild(a);
-            });
-        }
     </script>
 </body>
 </html>
