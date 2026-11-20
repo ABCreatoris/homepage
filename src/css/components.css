@@ -1,5 +1,5 @@
 
-        /* 社交图标：单行；字号用固定阶梯，不用多级 clamp */
+        /* 社交图标：空间不足时自然换行，避免窄屏隐藏入口 */
         #social-icons {
             display: flex;
             flex-wrap: wrap;
