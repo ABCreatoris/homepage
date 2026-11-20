@@ -1,5 +1,6 @@
 
         import { resolveSiteLocale } from './core/locale.js';
+        import { prefersReducedMotion } from './core/dom.js';
         import { loadSiteConfig as loadSiteConfigData, createEmptySiteConfig } from './core/config.js';
         import { normalizeSiteLinks } from './core/normalize.js';
         import { applyUiFromObject } from './components/profile.js';
@@ -128,9 +129,6 @@
             initSiteAnalytics(payload);
         }
 
-        function prefersReducedMotion() {
-            return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        }
 
         document.addEventListener('DOMContentLoaded', async function () {
             siteLocale = await resolveSiteLocale();
