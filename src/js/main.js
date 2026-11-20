@@ -750,7 +750,7 @@
             startAnimationSequence({
                 getHeaderAvatarSlotRect,
                 syncAvatarBadgeGeometry,
-                renderCards: function () { renderCards(renderCardsOptions()); },
+                renderCards: function () { renderCards({ links: siteContentLinks, bindMailtoClick: function (anchor, href) { bindMailtoClick(anchor, href, { uiMessage }); } }); },
                                 updateQuote: function (advanceNext) { quoteController.update(advanceNext); },
                 onMainIntroAnimationsComplete
             });
