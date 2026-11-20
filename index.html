@@ -397,8 +397,7 @@
             letter-spacing: 0.16em;
             text-transform: uppercase;
             color: #86868b;
-            text-align: center;
-            margin: 0 0 1.125rem;
+            text-align: center;            margin: 0 0 1.125rem;
         }
         
         .section-label {
@@ -797,8 +796,7 @@
         /* 周末：孔雀绿 / 祖母绿宝石感 */
         .avatar-presence-badge--weekend .avatar-presence-badge__core {
             background: linear-gradient(
-                148deg,
-                #3ecf9a 0%,
+                148deg,                #3ecf9a 0%,
                 #18a87a 38%,
                 #0d7d62 72%,
                 #065f4a 100%
@@ -1197,8 +1195,7 @@
             font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
                 sans-serif;
             font-feature-settings: 'kern' 1, 'liga' 1;
-            -webkit-font-smoothing: antialiased;
-        }
+            -webkit-font-smoothing: antialiased;        }
 
         html[lang^='en'] .font-display,
         html[lang^='en'] .hero-title,
@@ -1597,8 +1594,7 @@
                     id="header-flair-turbulence"
                     type="fractalNoise"
                     baseFrequency="0.045 0.09"
-                    numOctaves="2"
-                    seed="8"
+                    numOctaves="2"                    seed="8"
                     result="noise"
                 />
                 <feDisplacementMap
@@ -1689,7 +1685,9 @@
         </section>
     </div>
 
-    <script>
+    <script type="module">
+        import { resolveSiteLocale } from './src/js/core/locale.js';
+
         /** 境内 CN → 中文；境外 → 英文。失败时按浏览器语言回退。 */
         let siteLocale = 'zh';
 
@@ -1997,8 +1995,7 @@
                 }
                 return ui && ui.likeHoverHintEmpty ? ui.likeHoverHintEmpty : '期待你的点赞';
             }
-            var tpl = ui && ui.likeHoverHint ? ui.likeHoverHint : '已有{count}位访客点赞';
-            return tpl.split('{count}').join(formatLikeCountDisplay(n));
+            var tpl = ui && ui.likeHoverHint ? ui.likeHoverHint : '已有{count}位访客点赞';            return tpl.split('{count}').join(formatLikeCountDisplay(n));
         }
 
         function setHeroLikeUi(btn, countEl, liked, count, ui) {
@@ -2397,8 +2394,7 @@
                     .catch(function () {
                         if (media.fallbackUrl) {
                             fetchImageAsync(media.fallbackUrl, 8000)
-                                .then(function () {
-                                    markThumbReady(media.fallbackUrl);
+                                .then(function () {                                    markThumbReady(media.fallbackUrl);
                                     beginFullFetch();
                                 })
                                 .catch(function () {
@@ -2797,8 +2793,7 @@
         }
 
         function getHeaderFlairDistortNodes() {
-            return {
-                turbulence: document.getElementById('header-flair-turbulence'),
+            return {                turbulence: document.getElementById('header-flair-turbulence'),
                 displacement: document.getElementById('header-flair-displacement')
             };
         }
@@ -3031,33 +3026,6 @@
             return new URL(filename, window.location.origin + path).href;
         }
 
-        function localeFromNavigator() {
-            const nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
-            return /^zh/i.test(nav) ? 'zh' : 'en';
-        }
-
-        async function resolveSiteLocale() {
-            const ctrl = new AbortController();
-            const tid = setTimeout(function () {
-                ctrl.abort();
-            }, 2800);
-            try {
-                const res = await fetch('https://get.geojs.io/v1/ip/country.json', {
-                    signal: ctrl.signal,
-                    cache: 'no-store'
-                });
-                if (!res.ok) throw new Error('geo http');
-                const geo = await res.json();
-                const code = String(geo.country || geo.country_code || '').toUpperCase();
-                if (code === 'CN') return 'zh';
-                return 'en';
-            } catch (e) {
-                return localeFromNavigator();
-            } finally {
-                clearTimeout(tid);
-            }
-        }
-
         function isValidSiteConfig(data) {
             if (!data || typeof data !== 'object') return false;
             if (!data.ui || typeof data.ui !== 'object') return false;
@@ -3197,7 +3165,6 @@
                     if (mi < mottos.length) out.push(mottos[mi++]);
                 }
             }
-
             return out;
         }
 
@@ -3597,8 +3564,7 @@
 
             startAnimationSequence();
 
-            const quoteContainer = document.getElementById('quote-container');
-            quoteContainer.addEventListener('click', function () {
+            const quoteContainer = document.getElementById('quote-container');            quoteContainer.addEventListener('click', function () {
                 updateQuote(true);
                 scheduleQuoteAutoRotate();
             });
