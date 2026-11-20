@@ -3,7 +3,6 @@ export function startAnimationSequence({
     getHeaderAvatarSlotRect,
     syncAvatarBadgeGeometry,
     renderCards,
-    renderCardsOptions,
     updateQuote,
     onMainIntroAnimationsComplete
 }) {
@@ -57,12 +56,12 @@ export function startAnimationSequence({
                                 // 6. 正文文字链接 → 引言
                                 const cardsReveal = Math.max(420, socialIcons.length * 200 + 200);
                                 setTimeout(function () {
-                                    renderCards({ links: siteContentLinks, bindMailtoClick: function (anchor, href) { bindMailtoClick(anchor, href, { uiMessage }); } });
+                                    renderCards();
                                 }, cardsReveal);
 
                                 const quoteDelay = Math.max(620, socialIcons.length * 200 + 520);
                                 setTimeout(() => {
-                                    quoteController.update(false);
+                                    updateQuote(false);
                                     document.getElementById('quote-container').classList.add('show');
                                     setTimeout(onMainIntroAnimationsComplete, 900);
                                 }, quoteDelay);
