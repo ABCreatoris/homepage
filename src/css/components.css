@@ -373,7 +373,7 @@
                 transform 0.75s cubic-bezier(0.25, 0.1, 0.25, 1);
             margin-left: auto;
             margin-right: auto;
-            padding: 0.35rem 0.5rem 0.5rem;
+            padding: 0.55rem 0.75rem 0.65rem;
             text-align: center;
             perspective: 560px;
             -webkit-tap-highlight-color: transparent;
@@ -397,18 +397,18 @@
         /* 成对引号：挂在正文块左上角 / 右下角，不占单独一行 */
         #quote.font-quote {
             position: relative;
-            padding-left: 0.65em;
-            padding-right: 0.65em;
+            padding-left: 0.9em;
+            padding-right: 0.9em;
         }
 
         #quote.font-quote::before,
         #quote.font-quote::after {
             position: absolute;
             font-family: 'Times New Roman', 'Songti SC', 'STSong', Georgia, 'Palatino Linotype', serif;
-            font-size: 1.42em;
+            font-size: 1.28em;
             line-height: 1;
             font-weight: 400;
-            color: rgba(99, 102, 241, 0.28);
+            color: rgba(99, 102, 241, 0.22);
             pointer-events: none;
             z-index: 0;
             opacity: 0;
@@ -442,13 +442,13 @@
             display: inline-block;
             opacity: 0;
             transform-origin: 50% 100%;
-            filter: blur(7px);
-            transform: translateY(0.28em) rotateX(-34deg);
+            filter: blur(4px);
+            transform: translateY(0.18em) rotateX(-18deg);
         }
 
         .quote-container.quote-play .quote-glyph {
-            animation: quoteGlyphReveal 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            animation-delay: calc(var(--qi, 0) * 36ms);
+            animation: quoteGlyphReveal 0.56s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: calc(var(--qi, 0) * 24ms);
         }
 
         @keyframes quoteGlyphReveal {
@@ -461,12 +461,12 @@
 
         #quote-author {
             opacity: 0;
-            transform: translateY(6px);
-            filter: blur(6px);
+            transform: translateY(4px);
+            filter: blur(4px);
         }
 
         .quote-container.quote-play #quote-author {
-            animation: quoteAuthorReveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: quoteAuthorReveal 0.58s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             animation-delay: var(--quote-author-delay, 0.45s);
         }
 
