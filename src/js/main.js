@@ -190,7 +190,7 @@
                     quoteController.scheduleAutoRotate();
                 }
             });
-            scheduleQuoteAutoRotate();
+            quoteController.scheduleAutoRotate();
 
             var badgeGeomResizeTimer;
             window.addEventListener('resize', function () {
