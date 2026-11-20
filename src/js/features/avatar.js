@@ -159,7 +159,6 @@ export function createAvatarFeature({ prefersReducedMotion }) {
             preloadAvatarThumb(siteAvatarMedia.thumbUrl);
         }
 
-        var avatarMediaAppliedKey = '';
 
         function fetchImageAsync(url, timeoutMs) {
             return new Promise(function (resolve, reject) {
