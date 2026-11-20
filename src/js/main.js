@@ -13,6 +13,7 @@
         import { createAvatarFeature } from './features/avatar.js';
         import { createPresenceController } from './components/presence.js';
         import { createAvatarFlairController } from './animations/avatar-flair.js';
+        import { syncAvatarBadgeGeometry, getHeaderAvatarSlotRect, revealPresenceBadge, playAvatarPreBadgeWiggle } from './components/avatar-layout.js';
 
         /** 境内 CN → 中文；境外 → 英文。失败时按浏览器语言回退。 */
         let siteLocale = 'zh';
@@ -40,56 +41,6 @@
         let siteContentLinks = [];
 
         var mainIntroAnimComplete = false;
-
-        function syncAvatarBadgeGeometry() {
-            var slot = document.querySelector('.header-avatar-slot');
-            if (!slot) return;
-            var size = slot.offsetWidth;
-            if (!size) return;
-            var rPx = size / 2;
-            slot.style.setProperty('--avatar-r', rPx + 'px');
-            var badgeRem = Math.max(2.15, Math.min(2.55, size / 16 * 0.26)).toFixed(3) + 'rem';
-            slot.style.setProperty('--avatar-badge-hit', badgeRem);
-        }
-
-        function getHeaderAvatarSlotRect() {
-            var slot = document.querySelector('.header-avatar-slot');
-            if (!slot) return null;
-            syncAvatarBadgeGeometry();
-            return slot.getBoundingClientRect();
-        }
-
-        function revealPresenceBadge() {
-            syncAvatarBadgeGeometry();
-            var el = document.getElementById('avatar-presence-badge');
-            if (!el || el.hasAttribute('hidden')) return;
-            el.classList.remove('is-revealed');
-            requestAnimationFrame(function () {
-                requestAnimationFrame(function () {
-                    el.classList.add('is-revealed');
-                });
-            });
-        }
-
-        function playAvatarPreBadgeWiggle(done) {
-            var slot = document.querySelector('.header-avatar-slot');
-            if (!slot || prefersReducedMotion()) {
-                if (done) done();
-                return;
-            }
-            slot.classList.remove('avatar-wiggle-pre-badge');
-            void slot.offsetWidth;
-            slot.classList.add('avatar-wiggle-pre-badge');
-            slot.addEventListener(
-                'animationend',
-                function onEnd() {
-                    slot.removeEventListener('animationend', onEnd);
-                    slot.classList.remove('avatar-wiggle-pre-badge');
-                    if (done) done();
-                },
-                { once: true }
-            );
-        }
 
         function onMainIntroAnimationsComplete() {
             if (mainIntroAnimComplete) return;
