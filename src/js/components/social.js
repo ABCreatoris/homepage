@@ -1,3 +1,6 @@
+const SOCIAL_SVG_XHS =
+    '<svg class="xhs-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="5.5" fill="currentColor"/><path fill="#ffffff" d="M7 7h10v2H7zm0 4h7v2H7zm0 4h10v2H7z"/></svg>';
+
 /** Whether mobile contact protocols should be used for WeChat and QQ. */
 export function shouldUseMobileContactScheme() {
     if (window.matchMedia('(pointer: coarse)').matches) return true;
@@ -17,7 +20,6 @@ export function renderSocialIcons({
     copyTextToClipboard,
     showMailToast,
     bindMailtoClick,
-    socialSvgXhs
 }) {
     const container = document.getElementById('social-icons');
     if (!container) return;
@@ -75,7 +77,7 @@ export function renderSocialIcons({
         }
 
         if (link.iconKind === 'xiaohongshu') {
-            a.innerHTML = socialSvgXhs;
+            a.innerHTML = SOCIAL_SVG_XHS;
         } else {
             const icon = document.createElement('i');
             icon.className = link.iconClass;
