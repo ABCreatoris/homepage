@@ -1691,30 +1691,12 @@
         import { applyUiFromObject } from './src/js/components/profile.js';
         import { renderCards } from './src/js/components/cards.js';
         import { renderSocialIcons } from './src/js/components/social.js';
+        import { createQuoteController } from './src/js/components/quotes.js';
         import { showMailToast, copyTextToClipboard, bindMailtoClick } from './src/js/features/clipboard.js';
 
         /** 境内 CN → 中文；境外 → 英文。失败时按浏览器语言回退。 */
         let siteLocale = 'zh';
-
-        /** 格言列表（由 config.{zh|en}.json 的 quotes 填充） */
-        let quotesFromConfig = [];
-
-        /** 当前展示的格言在列表中的下标 */
-        let quoteDisplayIndex = 0;
-
-        /** 自动切换下一条格言的间隔（5.20 秒） */
-        const QUOTE_AUTO_ROTATE_MS = 5200;
-
-        /** 自动轮播计时器；手动点击后会 clear 再 schedule，重新从完整间隔计起 */
-        let quoteAutoRotateTimerId = null;
-
-        function scheduleQuoteAutoRotate() {
-            clearTimeout(quoteAutoRotateTimerId);
-            quoteAutoRotateTimerId = setTimeout(function () {
-                updateQuote(true);
-                scheduleQuoteAutoRotate();
-            }, QUOTE_AUTO_ROTATE_MS);
-        }
+        const quoteController = createQuoteController({ prefersReducedMotion });
 
         /** 当前语言 ui 文案（来自 config.*.json，供 toast / title 等使用） */
         let siteUi = {};
@@ -3010,97 +2992,6 @@
             });
         }
 
-        function filterQuotesList(list) {
-            return (Array.isArray(list) ? list : []).filter(function (q) {
-                return q && typeof q.text === 'string' && typeof q.author === 'string';
-            });
-        }
-
-        function quoteConfigHasItems(quotes) {
-            if (Array.isArray(quotes)) return quotes.length > 0;
-            if (!quotes || typeof quotes !== 'object') return false;
-            var m = Array.isArray(quotes.mottos) ? quotes.mottos.length : 0;
-            var f = Array.isArray(quotes.famous) ? quotes.famous.length : 0;
-            return m + f > 0;
-        }
-
-        function shuffleQuoteList(list) {
-            var arr = list.slice();
-            for (var i = arr.length - 1; i > 0; i--) {
-                var j = Math.floor(Math.random() * (i + 1));
-                var tmp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = tmp;
-            }
-            return arr;
-        }
-
-        /** 解析 config：座右铭 / 名人警句分组（兼容旧版 quotes 数组） */
-        function parseQuotesFromConfig(quotes) {
-            var mottos = [];
-            var famous = [];
-
-            if (Array.isArray(quotes)) {
-                famous = filterQuotesList(quotes);
-                return { mottos: mottos, famous: famous };
-            }
-
-            if (!quotes || typeof quotes !== 'object') {
-                return { mottos: mottos, famous: famous };
-            }
-
-            var mottoAuthor =
-                typeof quotes.mottosTitle === 'string' && quotes.mottosTitle.length
-                    ? quotes.mottosTitle
-                    : '我的座右铭';
-
-            if (Array.isArray(quotes.mottos)) {
-                quotes.mottos.forEach(function (m) {
-                    if (!m || typeof m.text !== 'string' || !m.text.trim()) return;
-                    mottos.push({
-                        text: m.text.trim(),
-                        author:
-                            typeof m.author === 'string' && m.author.length ? m.author : mottoAuthor
-                    });
-                });
-            }
-
-            if (Array.isArray(quotes.famous)) {
-                quotes.famous.forEach(function (q) {
-                    if (!q || typeof q.text !== 'string' || typeof q.author !== 'string') return;
-                    if (!q.text.trim() || !q.author.trim()) return;
-                    famous.push({ text: q.text.trim(), author: q.author.trim() });
-                });
-            }
-
-            return { mottos: mottos, famous: famous };
-        }
-
-        /** 每次访问：两组各自打乱后交替合并（座右铭 ↔ 名人警句） */
-        function buildQuotePlayOrder(quotes) {
-            var parsed = parseQuotesFromConfig(quotes);
-            var mottos = shuffleQuoteList(parsed.mottos);
-            var famous = shuffleQuoteList(parsed.famous);
-            var out = [];
-            var mi = 0;
-            var fi = 0;
-
-            if (mottos.length === 0) return famous;
-            if (famous.length === 0) return mottos;
-
-            var startWithMotto = Math.random() < 0.5;
-            while (mi < mottos.length || fi < famous.length) {
-                if (startWithMotto) {
-                    if (mi < mottos.length) out.push(mottos[mi++]);
-                    if (fi < famous.length) out.push(famous[fi++]);
-                } else {
-                    if (fi < famous.length) out.push(famous[fi++]);
-                    if (mi < mottos.length) out.push(mottos[mi++]);
-                }
-            }
-            return out;
-        }
-
         function normalizeLinksFromConfig(data) {
             const social = Array.isArray(data.social) ? data.social : [];
             const contentLinks = Array.isArray(data.contentLinks) ? data.contentLinks : [];
@@ -3180,117 +3071,22 @@
             try {
                 applyUiFromObject(data.ui);
                 normalizeLinksFromConfig(data);
-                quotesFromConfig = buildQuotePlayOrder(data.quotes);
-                quoteDisplayIndex = 0;
+                quoteController.setQuotes(data.quotes);
             } catch (e) {
                 console.warn('[homepage] config links invalid:', e);
                 siteSocialLinks = [];
                 siteContentLinks = [];
-                quotesFromConfig = [];
+                quoteController.setQuotes([]);
             }
             ingestAvatarExtensions(payload);
             applyAvatarUrlsToStacks();
             initSiteAnalytics(payload);
         }
 
-        function getQuoteList() {
-            return quotesFromConfig;
-        }
-
-        
-        // 判断是否英文
-        function isEnglish(text) {
-            return /^[A-Za-z0-9\s.,'"!?;:()\-]+$/.test(text);
-        }
-
         function prefersReducedMotion() {
             return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         }
 
-        /** 含中日韩则按字拆分，否则按英文词（空白保留为不动画文本节点） */
-        function segmentQuoteGlyphs(text) {
-            const hasCjk = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/.test(text);
-            const segments = [];
-            if (hasCjk) {
-                for (const ch of text) {
-                    segments.push({ text: ch, animate: !/\s/.test(ch) });
-                }
-            } else {
-                text.split(/(\s+)/).forEach(function (part) {
-                    if (!part) return;
-                    if (/^\s+$/.test(part)) segments.push({ text: part, animate: false });
-                    else segments.push({ text: part, animate: true });
-                });
-            }
-            return segments;
-        }
-
-        function fillQuoteGlyphs(quoteElem, text) {
-            quoteElem.textContent = '';
-            let idx = 0;
-            segmentQuoteGlyphs(text).forEach(function (seg) {
-                if (!seg.animate) {
-                    quoteElem.appendChild(document.createTextNode(seg.text));
-                    return;
-                }
-                const span = document.createElement('span');
-                span.className = 'quote-glyph';
-                span.textContent = seg.text;
-                span.style.setProperty('--qi', String(idx));
-                idx += 1;
-                quoteElem.appendChild(span);
-            });
-            return idx;
-        }
-        
-        /**
-         * 更新格言显示（逐词/逐字动画 + 署名错峰）。
-         * @param {boolean} advanceNext 为 true 时先切到下一条（顺序循环），再渲染；首次展示请传 false。
-         */
-        function updateQuote(advanceNext) {
-            const list = getQuoteList();
-            if (list.length === 0) return;
-
-            if (advanceNext === true) {
-                quoteDisplayIndex = (quoteDisplayIndex + 1) % list.length;
-            }
-
-            const quote = list[quoteDisplayIndex];
-
-            const container = document.getElementById('quote-container');
-            const quoteElem = document.getElementById('quote');
-            const authorEl = document.getElementById('quote-author');
-
-            if (prefersReducedMotion()) {
-                container.classList.remove('quote-play');
-                quoteElem.textContent = quote.text;
-                if (isEnglish(quote.text)) quoteElem.setAttribute('lang', 'en');
-                else quoteElem.removeAttribute('lang');
-                authorEl.textContent = '\u2014 ' + quote.author;
-                authorEl.classList.toggle('quote-attribution-cn', /[\u4e00-\u9fff]/.test(quote.author));
-                return;
-            }
-
-            container.classList.remove('quote-play');
-            void container.offsetWidth;
-
-            if (isEnglish(quote.text)) quoteElem.setAttribute('lang', 'en');
-            else quoteElem.removeAttribute('lang');
-
-            const glyphCount = fillQuoteGlyphs(quoteElem, quote.text);
-            authorEl.textContent = '\u2014 ' + quote.author;
-            authorEl.classList.toggle('quote-attribution-cn', /[\u4e00-\u9fff]/.test(quote.author));
-
-            let authorDelaySec = 0.22 + glyphCount * 0.036;
-            container.style.setProperty('--quote-author-delay', authorDelaySec + 's');
-
-            requestAnimationFrame(function () {
-                requestAnimationFrame(function () {
-                    container.classList.add('quote-play');
-                });
-            });
-        }
-        
         // 动画序列
         function startAnimationSequence() {
             // 获取相关元素
@@ -3348,7 +3144,7 @@
 
                                 const quoteDelay = Math.max(620, socialIcons.length * 200 + 520);
                                 setTimeout(() => {
-                                    updateQuote(false);
+                                    quoteController.update(false);
                                     document.getElementById('quote-container').classList.add('show');
                                     setTimeout(onMainIntroAnimationsComplete, 900);
                                 }, quoteDelay);
@@ -3362,14 +3158,13 @@
         document.addEventListener('DOMContentLoaded', async function () {
             siteLocale = await resolveSiteLocale();
             await loadSiteConfig();
-            quoteDisplayIndex = 0;
             renderSocialIcons({ links: siteSocialLinks, uiMessage, copyTextToClipboard, showMailToast, bindMailtoClick: function (anchor, href) { bindMailtoClick(anchor, href, { uiMessage }); }, socialSvgXhs: SOCIAL_SVG_XHS });
 
             startAnimationSequence();
 
             const quoteContainer = document.getElementById('quote-container');            quoteContainer.addEventListener('click', function () {
-                updateQuote(true);
-                scheduleQuoteAutoRotate();
+                quoteController.update(true);
+                quoteController.scheduleAutoRotate();
             });
             quoteContainer.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' || e.key === ' ') {
